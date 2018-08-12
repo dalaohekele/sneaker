@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.sneakerentity.dao.ProductInfoDao">
+    <resultMap id="productInfoMap" type="com.zl.sneakerentity.model.ProductInfo">
+        <id column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="product_description" property="productDescription"/>
+        <result column="product_icon" property="productIcon"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="category_type" property="categoryType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--查询上架商品-->
+    <select id="selectByProductCategoryTpye" resultMap="productInfoMap">
+    select product_id,product_name,product_price,product_stock,product_description,
+    product_icon,product_status,category_type,create_time,update_time
+    from tt_product_info
+    where product_status = 0
+    and category_type in
+    <foreach collection="categoryList" item="list" index="index" open="(" separator="," close=")">
+        #{list}
+    </foreach>
+    LIMIT #{rowIndex},#{pageSize};
+    </select>
+
+    <select id="findProductById" resultMap="productInfoMap">
+       select product_id,product_name,product_price,product_stock,product_description,
+       product_icon,product_status,category_type,create_time,update_time
+       from tt_product_info
+       where product_id=#{productId}
+    </select>
+
+    <!--订单生成成功 更新库存-->
+    <update id="updateProductQuantity" parameterType="com.zl.sneakerentity.dao.ProductInfoDao">
+        UPDATE tt_product_info
+        SET product_stock = product_stock- #{orderDetailQuantity}
+        where product_id=#{productId}
+    </update>
+
+    <!--取消订单 回滚库存-->
+    <update id="backProductQuantity" parameterType="com.zl.sneakerentity.dao.ProductInfoDao">
+        UPDATE tt_product_info
+        SET product_stock = product_stock + #{orderDetailQuantity}
+        where product_id=#{productId}
+    </update>
+</mapper>
+

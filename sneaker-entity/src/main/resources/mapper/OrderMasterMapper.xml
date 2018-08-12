@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.sneakerentity.dao.OrderMasterDao">
+    <resultMap id="orderMasterMapper" type="com.zl.sneakerentity.model.OrderMaster">
+        <id column="order_id" property="orderId"/>
+        <result column="buyer_name" property="buyerName"/>
+        <result column="buyer_phone" property="buyerPhone"/>
+        <result column="buyer_address" property="buyerAddress"/>
+        <result column="buyer_openid" property="buyerOpenid"/>
+        <result column="order_amount" property="orderAmount"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--订单详情-->
+    <insert id="insertOrderMaster" parameterType="com.zl.sneakerentity.model.OrderMaster">
+        insert into
+        tt_order_master(order_id,buyer_name,buyer_phone,buyer_address,buyer_openid,order_amount,
+        order_status,pay_status,create_time,update_time)
+        values (#{orderId},#{buyerName},#{buyerPhone},#{buyerAddress},#{buyerOpenid},#{orderAmount},
+        #{orderStatus},#{payStatus},#{createTime},#{updateTime})
+    </insert>
+
+    <!--通过openId查询-->
+    <select id="selectOrderMasterByOpenid" resultMap="orderMasterMapper">
+      select order_id,buyer_name,buyer_phone,buyer_address,buyer_openid,order_amount,
+      order_status,pay_status,create_time,update_time
+      from tt_order_master
+      where buyer_openid=#{openid}
+      order by create_time desc
+      LIMIT #{rowIndex},#{pageSize};
+    </select>
+
+    <!--通过orderId查询-->
+    <select id="selectByOrderId" resultMap="orderMasterMapper">
+      select order_id,buyer_name,buyer_phone,buyer_address,buyer_openid,order_amount,
+      order_status,pay_status,create_time,update_time
+      from tt_order_master
+      where order_id=#{orderId}
+    </select>
+
+    <!--修改订单状态为取消-->
+    <update id="updateOrderById" parameterType="com.zl.sneakerentity.dao.OrderMasterDao">
+        UPDATE tt_order_master
+        SET order_status = 2
+        where order_id=#{orderId}
+        and buyer_openid=#{openId}
+    </update>
+
+    <!--openid是否对应orderId-->
+    <select id="selectOpenIdandOrderId" resultType="java.lang.Integer">
+        SELECT count(1) from tt_order_master
+        WHERE order_id=#{orderId}
+        and buyer_openid=#{openId};
+    </select>
+</mapper>
