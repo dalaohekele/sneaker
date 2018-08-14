@@ -161,6 +161,7 @@ public class RedisService {
         }
     }
 
+    // 将string类型转换为实体类
     public static <T> T stringToBean(String str,Class<T> clazz){
         if (str == null || str.length() <=0 || clazz==null){
             return null;

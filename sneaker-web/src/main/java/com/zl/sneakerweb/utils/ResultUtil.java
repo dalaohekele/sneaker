@@ -53,6 +53,14 @@ public class ResultUtil {
         obj.put("errMsge", resultEnum.getMessage());
         return obj;
     }
+//
+//    public static Object fail(Object data){
+//        Map<String,Object> obj = new HashMap<String,Object>();
+//        obj.put("errCode",1);
+//        obj.put("errMsg","失败");
+//        obj.put("data",data);
+//        return obj;
+//    }
 
     public static Object badArgument(){
         return fail(401, "参数不对");

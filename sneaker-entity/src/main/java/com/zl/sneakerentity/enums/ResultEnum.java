@@ -12,7 +12,7 @@ public enum ResultEnum {
 
     PRODUCT_NOT_EXI(10, "商品不存在"),
 
-    PRODUC_STOCK_ERROR(11, "库存不正确"),
+    PRODUC_STOCK_ERROR(11, "缺少库存"),
 
     ORDER_NOT_EX(12, "订单不存在"),
 
