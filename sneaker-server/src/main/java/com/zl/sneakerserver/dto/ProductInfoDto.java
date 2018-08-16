@@ -24,7 +24,7 @@ public class ProductInfoDto {
 
    public ProductInfoDto(){}
 
-   //失败的构造器
+   //构造器
    public ProductInfoDto(ProductInfoStateEnum productInfoStateEnum){
        this.state = productInfoStateEnum.getState();
        this.stateInfo = productInfoStateEnum.getStateInfo();

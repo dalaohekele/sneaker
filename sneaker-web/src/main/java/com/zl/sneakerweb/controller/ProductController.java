@@ -44,18 +44,19 @@ public class ProductController {
      */
     @GetMapping("/category/list_all")
     public Object categoryAll(){
+        try {
         /**从缓存中读取**/
         String cacheProductCategory= redisService.get(GoodsKey.getGoodsList,"",String.class);
-        //string转jsonObject,jsonObject再转实体类对象
-        JSONObject cacheProductCategoryObject =JSONObject.parseObject(cacheProductCategory);
-        ProductCategoryDto cacheProductCategoryDto = JSON.toJavaObject(cacheProductCategoryObject,ProductCategoryDto.class);
-        //拼接缓存中的数据
-        if (!StringUtils.isEmpty(cacheProductCategoryDto.getProductCategoryList())){
+        if (!StringUtils.isEmpty(cacheProductCategory)){
+            //string转jsonObject,jsonObject再转实体类对象
+            JSONObject cacheProductCategoryObject =JSONObject.parseObject(cacheProductCategory);
+            ProductCategoryDto cacheProductCategoryDto = JSON.toJavaObject(cacheProductCategoryObject,ProductCategoryDto.class);
+            //拼接缓存中的数据
             Map<String,Object> cacheMap = new HashMap<>();
             cacheMap.put("productcategory_list",cacheProductCategoryDto.getProductCategoryList());
             return ResultUtil.ok(cacheMap);
         }
-        try {
+
             ProductCategoryDto productCategoryDto = productCategoryServer.getProductCategoryAll();
             //存入缓存
             try {

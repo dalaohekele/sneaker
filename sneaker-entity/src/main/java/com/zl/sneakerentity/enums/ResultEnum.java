@@ -42,9 +42,22 @@ public enum ResultEnum {
 
     PRODUCT_STATUS_ERROR(23, "商品状态不正确"),
 
-    LOGIN_FAIL(25, "登录失败, 登录信息不正确"),
+    LOGIN_FAIL(25, "登录失败, 用户不存在"),
 
-    LOGOUT_SUCCESS(26, "登出成功"),;
+    LOGIN_FAIL_PASS(10025,"密码错误"),
+
+    LOGOUT_SUCCESS(26, "登出成功"),
+
+    REGISTER_FAIL(27,"用户注册失败"),
+
+    REGISTER_SUCESS(0,"用户注册成功"),
+
+    REQUIRMENT_USERNAME(28,"用户名已存在"),
+
+    FINDUSER_FAIL(30,"用户查询失败"),
+
+    PASSWORD_UPDATE_SUCCESS(0,"密码更新成功"),
+    ;
 
     private Integer state;
     private String message;

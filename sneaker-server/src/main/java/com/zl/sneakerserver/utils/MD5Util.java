@@ -28,10 +28,9 @@ public class MD5Util {
     /**
      * 第二次Md5加密，用于存储
      * @param formPass
-     * @param salt
      * @return
      */
-    public static String formPassToDbPass(String formPass,String salt){
+    public static String formPassToDbPass(String formPass){
         String str = ""+salt.charAt(0)+salt.charAt(2)+formPass+salt.charAt(5)+salt.charAt(4);
         return md5(str);
     }
@@ -39,12 +38,11 @@ public class MD5Util {
     /**
      * 合并
      * @param input
-     * @param saltDb
      * @return
      */
-    public static String inputPassToDbPass(String input,String saltDb){
+    public static String inputPassToDbPass(String input){
         String formPass = inputPassToFormPass(input);
-        String dbPass = formPassToDbPass(formPass,saltDb);
+        String dbPass = formPassToDbPass(formPass);
         return dbPass;
     }
 
