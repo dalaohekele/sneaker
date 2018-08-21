@@ -31,6 +31,13 @@ public interface UserDao {
     User selectUserByName(String userName);
 
     /**
+     * 通过id查找用户
+     * @param userId
+     * @return
+     */
+    User selectUserById(String userId);
+
+    /**
      * 判断用户名是否重复
      * @param userName
      * @return

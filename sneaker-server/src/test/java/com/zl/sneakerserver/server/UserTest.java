@@ -38,8 +38,8 @@ public class UserTest {
     @Test
     @Ignore
     public void getUserTest(){
-        UserDto userDto = userServer.getUser("zzl");
-        System.out.println(userDto.getUser().getPassWord());
+        User user = userServer.getUser("zzl");
+        System.out.println();
     }
 
     @Test

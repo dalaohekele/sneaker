@@ -22,7 +22,14 @@ public interface UserServer {
      * @param userName
      * @return
      */
-    UserDto getUser(String userName);
+    User getUser(String userName);
+
+    /**
+     * 根据id获取信息
+     * @param userId
+     * @return
+     */
+    User getUserById(String userId);
 
     /**
      * 更新密码
@@ -30,6 +37,5 @@ public interface UserServer {
      * @return
      */
     UserDto updateUserPassword(User user);
-
 
 }

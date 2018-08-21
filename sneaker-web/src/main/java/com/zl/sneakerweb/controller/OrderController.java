@@ -9,7 +9,6 @@ import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.server.OrderServer;
 import com.zl.sneakerweb.utils.RequestUtil;
 import com.zl.sneakerweb.utils.ResultUtil;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/order")
 @Slf4j
-@Api("订单相关api")
 public class OrderController {
     @Autowired
     private OrderServer orderServer;

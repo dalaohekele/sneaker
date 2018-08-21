@@ -57,6 +57,8 @@ public enum ResultEnum {
     FINDUSER_FAIL(30,"用户查询失败"),
 
     PASSWORD_UPDATE_SUCCESS(0,"密码更新成功"),
+
+    SESSION_ERROR(10021,"Session不存在或者已经失效"),
     ;
 
     private Integer state;

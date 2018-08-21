@@ -20,11 +20,18 @@
         values (#{Id},#{userName},#{passWord},#{role},#{headImage},#{loginCount},#{createTime},#{updateTime})
     </insert>
 
-    <!--通过id查询用户-->
+    <!--通过userName查询用户-->
     <select id="selectUserByName" resultMap="userMapper">
         SELECT id,user_name,password,role,head_image,login_count,create_time,update_time
         FROM tt_user
         WHERE user_name=#{userName}
+    </select>
+
+    <!--通过id查询用户-->
+    <select id="selectUserById" resultMap="userMapper">
+        SELECT id,user_name,password,role,head_image,login_count,create_time,update_time
+        FROM tt_user
+        WHERE id=#{Id}
     </select>
 
     <!--用户名是否已存在-->
