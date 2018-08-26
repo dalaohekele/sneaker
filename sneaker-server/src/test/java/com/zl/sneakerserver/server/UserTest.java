@@ -24,6 +24,7 @@ public class UserTest {
     UserServer userServer;
 
     @Test
+    @Ignore
     public void registerUserTest(){
         User user = new User();
         user.setUserName("qwe");
@@ -39,7 +40,7 @@ public class UserTest {
     @Ignore
     public void getUserTest(){
         User user = userServer.getUser("zzl");
-        System.out.println();
+        System.out.println(user.getId());
     }
 
     @Test
@@ -50,5 +51,14 @@ public class UserTest {
         user.setPassWord("123456");
         UserDto userDto = userServer.updateUserPassword(user);
         System.out.println(userDto.getStateInfo());
+    }
+
+    @Test
+    public void updateUserHeadTest(){
+        User user = new User();
+        user.setId("1111");
+        user.setHeadImage("/image/new");
+        UserDto userDto = userServer.updateUserHead(user);
+        System.out.println(userDto.getUser().getUpdateTime());
     }
 }

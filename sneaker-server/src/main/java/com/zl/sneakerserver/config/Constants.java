@@ -17,7 +17,22 @@ public class Constants {
     public static final int TOKEN_EXPIRES_HOUR = 72;
 
     /**
-     * 存放Authorization的header字段
+     * 存放token的header字段
      */
-    public static final String AUTHORIZATION = "authorization";
+    public static final String AUTHORIZATION = "token";
+
+    /**
+     * 存放wx token
+     */
+    public static final String LOGIN_TOKEN_WX="token_wx";
+
+    /**
+     * 微信小程序的APPID
+     */
+    public static final String APPID="wxc5ccc9ddb801feb8";
+
+    /**
+     * 微信小程序的SECRET
+     */
+    public static final String SECRET="79323f6dc5457d26dcf9e0d22e80fd83";
 }

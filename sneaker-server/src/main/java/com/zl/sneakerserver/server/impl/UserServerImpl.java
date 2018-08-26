@@ -68,6 +68,42 @@ public class UserServerImpl implements UserServer {
     }
 
     /**
+     * 微信登陆自动注册用户信息
+     * @param openId
+     */
+    @Override
+    public UserDto autoRegisterUser(String openId) {
+        try {
+            User user = userDao.selectUserByOpenId(openId);
+            if (user!=null){
+                return new UserDto(ResultEnum.USER_EXISTS,user);
+            }
+            //生成userid
+            String userId = KeyUtils.genUniqueKey();
+            //密码加密,初始密码
+            String password = MD5Util.inputPassToDbPass("123456");
+
+            User newUser = new User();
+            newUser.setId(userId);
+            newUser.setPassWord(password);
+            newUser.setWxOpenId(openId);
+            newUser.setRole(1);  //1为卖家，2为管理员
+            newUser.setWxOpenId(openId);
+
+            int effectNum = userDao.insertUser(newUser);
+            if (effectNum <= 0) {
+                return new UserDto(ResultEnum.REGISTER_FAIL);
+            } else {
+                //注册成功
+                return new UserDto(ResultEnum.REGISTER_SUCESS,newUser);
+            }
+        }catch (Exception e){
+            log.error(ResultEnum.REGISTER_FAIL.getMessage());
+            throw new UserException(ResultEnum.REGISTER_FAIL.getMessage() + ":" + e.getMessage());
+        }
+    }
+
+    /**
      * 通过userName查询用户信息
      *
      * @param userName
@@ -116,6 +152,41 @@ public class UserServerImpl implements UserServer {
             return new UserDto(ResultEnum.PASSWORD_UPDATE_SUCCESS);
         } catch (Exception e) {
             throw new UserException("密码更新失败 :" + e.getMessage());
+        }
+    }
+
+    /**
+     * 更新头像
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public UserDto updateUserHead(User user) {
+        try {
+            int effectNum = userDao.updateUserHeadById(user);
+            if (effectNum <= 0) {
+                return new UserDto(ResultEnum.HEAD_UPDATE_Fail);
+            }
+            return new UserDto(ResultEnum.HEAD_UPDATE_SUCCESS);
+        } catch (Exception e) {
+            throw new UserException("头像更新失败 :" + e.getMessage());
+
+        }
+    }
+
+    /**
+     * 通过wxOpenId,查询用户
+     * @param wxOpenId
+     * @return
+     */
+    @Override
+    public User findUserByWxId(String wxOpenId){
+        try {
+            User user = userDao.selectUserByOpenId(wxOpenId);
+            return user;
+        }catch (Exception e){
+            throw new UserException("通过wxOpenId,查询用户失败" + e.getMessage());
         }
     }
 

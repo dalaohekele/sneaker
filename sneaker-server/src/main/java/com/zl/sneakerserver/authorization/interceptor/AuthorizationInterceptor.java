@@ -31,6 +31,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                              HttpServletResponse response, Object handler) throws Exception {
         //如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
+            response.sendError(401,"请登录");
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -46,6 +47,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         //如果验证token失败，并且方法注明了Authorization，返回401错误
         if (method.getAnnotation(Autorization.class) != null) {
+            response.sendError(401,"请登录");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }

@@ -44,5 +44,19 @@ public interface UserDao {
      */
     int requirmentUserByName(String userName);
 
+    /**
+     * 修改用户头像
+     * @param user
+     * @return
+     */
+    int updateUserHeadById(User user);
+
+    /**
+     * 通过openId查询用户
+     * @param openId
+     * @return
+     */
+    User selectUserByOpenId(String openId);
+
 
 }

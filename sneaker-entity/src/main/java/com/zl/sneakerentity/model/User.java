@@ -19,6 +19,8 @@ public class User {
     private String passWord;
     /* 用户角色*/
     private int role;
+    /*微信用户id*/
+    private String wxOpenId;
     /* 头像*/
     private String headImage;
     /* 登陆次数*/
@@ -26,6 +28,14 @@ public class User {
     private Date createTime;
 
     private Date updateTime;
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
 
     public String getId() {
         return Id;

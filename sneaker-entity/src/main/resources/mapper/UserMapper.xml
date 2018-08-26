@@ -7,6 +7,7 @@
         <result column="user_name" property="userName"/>
         <result column="password" property="passWord"/>
         <result column="role" property="role"/>
+        <result column="wx_openid" property="wxOpenId"/>
         <result column="head_image" property="headImage"/>
         <result column="login_count" property="loginCount"/>
         <result column="create_time" property="createTime"/>
@@ -16,8 +17,8 @@
     <!--添加用户-->
     <insert id="insertUser" parameterType="com.zl.sneakerentity.model.User">
         insert into
-        tt_user(id,user_name,password,role,head_image,login_count,create_time,update_time)
-        values (#{Id},#{userName},#{passWord},#{role},#{headImage},#{loginCount},#{createTime},#{updateTime})
+        tt_user(id,user_name,password,role,wx_openid,head_image,login_count,create_time,update_time)
+        values (#{Id},#{userName},#{passWord},#{role},#{wxOpenId},#{headImage},#{loginCount},#{createTime},#{updateTime})
     </insert>
 
     <!--通过userName查询用户-->
@@ -50,6 +51,21 @@
         </set>
         where id=#{Id}
     </update>
+
+    <!--修改头像-->
+    <update id="updateUserHeadById" parameterType="com.zl.sneakerentity.model.User">
+        update tt_user
+        <set>
+            <if test="headImage!=null">headImage=#{user.headImage}</if>
+        </set>
+        where id=#{user.Id}
+    </update>
+
+    <select id="selectUserByOpenId" resultMap="userMapper">
+        SELECT id,user_name,password,role,wx_openid,head_image,login_count,create_time,update_time
+        FROM tt_user
+        WHERE wx_openid=#{openId}
+    </select>
 
 
 

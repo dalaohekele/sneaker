@@ -18,6 +18,11 @@ public interface UserServer {
     UserDto registerUser(User user);
 
     /**
+     * 自动注册用户信息
+     */
+    UserDto autoRegisterUser(String openId);
+
+    /**
      * 获取用户信息
      * @param userName
      * @return
@@ -37,5 +42,19 @@ public interface UserServer {
      * @return
      */
     UserDto updateUserPassword(User user);
+
+    /**
+     * 根据id更新头像
+     * @param user
+     * @return
+     */
+    UserDto updateUserHead(User user);
+
+    /**
+     * 通过wxOpenId,查询用户
+     * @param wxOpenId
+     * @return
+     */
+    User findUserByWxId(String wxOpenId);
 
 }

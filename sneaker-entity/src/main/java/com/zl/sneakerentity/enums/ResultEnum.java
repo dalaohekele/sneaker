@@ -56,7 +56,13 @@ public enum ResultEnum {
 
     FINDUSER_FAIL(30,"用户查询失败"),
 
+    USER_EXISTS(10030,"用户已存在"),
+
     PASSWORD_UPDATE_SUCCESS(0,"密码更新成功"),
+
+    HEAD_UPDATE_SUCCESS(0,"头像更新成功"),
+
+    HEAD_UPDATE_Fail(10020,"头像更新失败"),
 
     SESSION_ERROR(10021,"Session不存在或者已经失效"),
     ;

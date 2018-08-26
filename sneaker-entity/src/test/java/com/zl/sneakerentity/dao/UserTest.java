@@ -21,10 +21,9 @@ public class UserTest {
     UserDao userDao;
 
     @Test
-    @Ignore
     public void insertUserTest(){
         User user = new User();
-        user.setId("1111");
+        user.setId("11112");
         user.setPassWord("asdalas");
         user.setRole(1);
         user.setHeadImage("/image");
@@ -43,6 +42,7 @@ public class UserTest {
 //    }
 
     @Test
+    @Ignore
     public void updateUserPasswordTest(){
         User user = new User();
         user.setId("1111");

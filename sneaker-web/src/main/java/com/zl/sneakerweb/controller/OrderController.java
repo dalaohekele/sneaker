@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.zl.sneakerentity.enums.OrderStatusEnum;
 import com.zl.sneakerentity.enums.ResultEnum;
 import com.zl.sneakerentity.model.OrderDetail;
+import com.zl.sneakerentity.model.User;
+import com.zl.sneakerserver.authorization.annotatiaon.Autorization;
+import com.zl.sneakerserver.authorization.annotatiaon.CurrentUser;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.server.OrderServer;
 import com.zl.sneakerweb.utils.RequestUtil;
@@ -39,11 +42,13 @@ public class OrderController {
      */
     @ApiOperation(value = "创建订单")
     @PostMapping(value = "/create")
-    public Object create(@RequestBody Map<String, Object> reqMap) {
+    @Autorization
+    public Object create(@RequestBody Map<String, Object> reqMap,@CurrentUser User user) {
+        //获取登陆用户的userId
+        String buyerOpenId = RequestUtil.getMapString(user.getId());
 
         String buyerName = RequestUtil.getMapString(reqMap.get("buyer_name").toString());
         String buyerPhone = RequestUtil.getMapString(reqMap.get("buyer_phone").toString());
-        String buyerOpenId = RequestUtil.getMapString(reqMap.get("open_id").toString());
         String buyerAddress = RequestUtil.getMapString(reqMap.get("buyer_address").toString());
         //购物车item里面包含orderdetail
         Object items = reqMap.get("item");
