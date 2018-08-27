@@ -39,6 +39,7 @@
       order_status,pay_status,create_time,update_time
       from tt_order_master
       where order_id=#{orderId}
+      and buyer_openid=#{buyerOpenid}
     </select>
 
     <!--修改订单状态为取消-->

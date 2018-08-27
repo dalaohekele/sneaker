@@ -33,7 +33,8 @@ public interface OrderMasterDao {
      * @param orderId
      * @return
      */
-    OrderMaster selectByOrderId(String orderId);
+    OrderMaster selectByOrderId(@Param("orderId") String orderId,
+                                @Param("buyerOpenid") String buyerOpenid);
 
     /**
      * 取消订单

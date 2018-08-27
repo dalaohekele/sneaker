@@ -102,7 +102,11 @@ public class UserController {
         return ResultUtil.fail();
     }
 
-
+    /**
+     * 用户信息
+     * @param user
+     * @return
+     */
     @GetMapping("/info")
     @Autorization
     public Object userListController(@CurrentUser User user) {

@@ -65,8 +65,9 @@ public class OrderServerImpl implements OrderServer {
                 for (OrderDetail orderDetail : orderDto.getOrderDetailList()) {
                     //通过订单id查询商品
                     ProductInfo productInfo = productInfoServer.findById(orderDetail.getProductId());
-                    //判断商品库存
-                    if(productInfo.getProductStock() - orderDetail.getProductQuantity()<=-1){
+                    int productQuantity = Math.abs(orderDetail.getProductQuantity());
+                    //判断商品库存,Math.abs()转换负数
+                    if(productInfo.getProductStock() - productQuantity<=-1){
                         throw new OrderException("商品库存不够");
                     } else {
                         //计算总价
@@ -84,7 +85,7 @@ public class OrderServerImpl implements OrderServer {
                         }else{
                             //减库存
                             productInfoDao.updateProductQuantity(orderDetail.getProductId(),
-                                    orderDetail.getProductQuantity());
+                                    productQuantity);
                         }
                     }
                 }
@@ -146,10 +147,10 @@ public class OrderServerImpl implements OrderServer {
      */
     @Override
     @Transactional
-    public OrderDto findByOrderId(String orderId) {
+    public OrderDto findByOrderId(String orderId,String userId) {
         OrderDto orderdto = new OrderDto();
         try {
-            OrderMaster orderMaster = orderMasterDao.selectByOrderId(orderId);
+            OrderMaster orderMaster = orderMasterDao.selectByOrderId(orderId,userId);
             orderdto.setOrderMaster(orderMaster);
         } catch (Exception e) {
             throw new OrderException("通过orderid查询 error:" + e.getMessage());
@@ -179,14 +180,14 @@ public class OrderServerImpl implements OrderServer {
                 } else {
                     //取消订单成功，库存回滚
                     for (OrderDetail orderDetail : orderDetailDao.selectOrderDetailList(orderId)){
-                        //获取id 和数量
+                        //获取id 和数量,利用Math.abs()绝对值转换
                         String productId = orderDetail.getProductId();
-                        Integer productQuantity = orderDetail.getProductQuantity();
+                        Integer productQuantity = Math.abs(orderDetail.getProductQuantity());
                         //回滚库存
                         productInfoDao.backProductQuantity(productId,productQuantity);
                     }
                     //通过id 获取订单详情
-                    OrderMaster orderMaster = findByOrderId(orderId).getOrderMaster();
+                    OrderMaster orderMaster = findByOrderId(orderId,openId).getOrderMaster();
                     //将更新后的orderMaster 赋值orderDto
                     BeanUtils.copyProperties(orderMaster, orderDto);
                 }
@@ -198,7 +199,7 @@ public class OrderServerImpl implements OrderServer {
     }
 
     /**
-     * //判断openid是否属于orderid
+     * 判断openid是否属于orderid
      *
      * @param openId
      * @param orderId

@@ -90,16 +90,18 @@ public class OrderController {
     /**
      * 订单列表
      *
-     * @param openid
      * @param page
      * @param size
      * @return
      */
     @GetMapping("/list")
-    public Object list(@RequestParam("openid") String openid,
-                       @RequestParam(value = "page", defaultValue = "0") Integer page,
-                       @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    @Autorization
+    public Object list(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                       @RequestParam(value = "size", defaultValue = "10") Integer size,
+                       @CurrentUser User user) {
+
         try {
+            String openid = user.getId();
             if (StringUtils.isEmpty(openid)) {
                 log.error("【查询订单列表】openid为空");
                 return ResultUtil.badArgumentValue();
@@ -121,9 +123,11 @@ public class OrderController {
      * @return
      */
     @PostMapping("/cancel")
-    public Object cancel(@RequestBody Map<String, Object> reqMap) {
+    @Autorization
+    public Object cancel(@CurrentUser User user,
+                         @RequestBody Map<String, Object> reqMap) {
         try {
-            String openId = RequestUtil.getMapString(reqMap.get("open_id").toString());
+            String openId = user.getId();
             String orderId = RequestUtil.getMapString(reqMap.get("order_id").toString());
             if (openId == null || orderId == null) {
                 return ResultUtil.badArgument();
@@ -153,14 +157,21 @@ public class OrderController {
      * @param reqMap
      * @return
      */
-    @PostMapping("detail")
-    public Object detail(@RequestBody Map<String, Object> reqMap) {
+    @PostMapping("/detail")
+    @Autorization
+    public Object detail(@CurrentUser User user,
+                         @RequestBody Map<String, Object> reqMap) {
+        String userId = user.getId();
         String orderId = RequestUtil.getMapString(reqMap.get("order_id").toString());
         if (orderId == null) {
             return ResultUtil.badArgument();
         }
         try {
-            OrderDto orderDto = orderServer.findByOrderId(orderId);
+            //判断订单与用户Id是否一致
+            OrderDto orderDto = orderServer.findByOrderId(orderId,userId);
+            if (orderDto.getOrderMaster()==null){
+                return ResultUtil.fail(ResultEnum.ORDER_OWNER_ERROR);
+            }
             return ResultUtil.ok(orderDto.getOrderMaster());
         } catch (Exception e) {
             log.error("订单查询错误：{}", e.getMessage());

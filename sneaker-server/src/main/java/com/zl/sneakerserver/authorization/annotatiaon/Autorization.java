@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 
 /**
- * 检查用户是否登录的注解
+ * 检查用户是否登录
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

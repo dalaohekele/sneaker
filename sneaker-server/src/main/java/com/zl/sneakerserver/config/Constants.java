@@ -34,5 +34,5 @@ public class Constants {
     /**
      * 微信小程序的SECRET
      */
-    public static final String SECRET="79323f6dc5457d26dcf9e0d22e80fd83";
+    public static final String SECRET="6def530ef7070da04102520b5bfe1a27";
 }

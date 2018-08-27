@@ -19,7 +19,7 @@ public interface OrderServer {
 
 
     /**
-     * 通过微信id查找
+     * 通过用户id查找
      * @param buyerOpenId
      * @param pageIndex
      * @param pageSize
@@ -32,7 +32,7 @@ public interface OrderServer {
      * @param orderId
      * @return
      */
-    OrderDto findByOrderId(String orderId);
+    OrderDto findByOrderId(String orderId,String userId);
 
 
     /**
