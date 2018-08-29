@@ -52,7 +52,7 @@ public class OrderMQController {
         String buyerPhone = RequestUtil.getMapString(reqMap.get("buyer_phone").toString());
         String buyerOpenId = RequestUtil.getMapString(reqMap.get("open_id").toString());
         String buyerAddress = RequestUtil.getMapString(reqMap.get("buyer_address").toString());
-        //购物车item里面包含orderdetail
+        //订单详情item里面包含orderdetail
         Object items = reqMap.get("item");
 
         if (buyerName == null || buyerPhone == null || buyerAddress == null) {

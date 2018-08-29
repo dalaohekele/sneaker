@@ -26,7 +26,11 @@ public enum ResultEnum {
 
     ORDER_PAY_STATUS_ERROR(17, "订单支付状态不正确"),
 
-    CART_EMPTY(18, "购物车为空"),
+    CART_EMPTY(10018, "购物车为空"),
+
+    ADD_CART_ERROR(10017, "添加购物车失败"),
+
+    ADD_CART_SUCCESS(10016, "成功添加购物车"),
 
     ORDER_OWNER_ERROR(10019, "该订单不属于当前用户"),
 

@@ -61,7 +61,7 @@ public class OrderServerImpl implements OrderServer {
             //订单价格
             BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
             try {
-                //获取购物车中商品数量，然后计算总价
+                //获取订单详情中商品数量，然后计算总价
                 for (OrderDetail orderDetail : orderDto.getOrderDetailList()) {
                     //通过订单id查询商品
                     ProductInfo productInfo = productInfoServer.findById(orderDetail.getProductId());

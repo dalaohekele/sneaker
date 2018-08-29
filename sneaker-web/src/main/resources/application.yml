@@ -24,3 +24,11 @@ redis:
   poolMaxTotal: 10
   poolMaxIdle: 10
   poolMaxWait: 3
+
+upload:
+  localtion:
+    linux: /Users/le/Documents/image/
+    mac: /Users/le/Documents/image/
+    windows: D:/meatball/file/
+  maxFileSize: 10240KB
+  maxRequestSize: 102400KB
