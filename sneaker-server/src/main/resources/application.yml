@@ -59,14 +59,6 @@ spring:
         max-interval: 10000
         multiplier: 1.0
 
-upload:
-  localtion:
-    linux: /Users/le/Documents/image/
-    mac: /Users/le/Documents/image/
-    windows: D:/meatball/file/
-  maxFileSize: 10240KB
-  maxRequestSize: 102400KB
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zl.sneakerentity.model

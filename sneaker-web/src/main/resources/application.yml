@@ -13,6 +13,10 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/sneaker?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useAffectedRows=true
       username: root
       password: root
+  servlet:
+        multipart:
+          max-file-size: 10Mb
+          max-request-size: 100Mb
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zl.sneakerentity.model
@@ -24,11 +28,3 @@ redis:
   poolMaxTotal: 10
   poolMaxIdle: 10
   poolMaxWait: 3
-
-upload:
-  localtion:
-    linux: /Users/le/Documents/image/
-    mac: /Users/le/Documents/image/
-    windows: D:/meatball/file/
-  maxFileSize: 10240KB
-  maxRequestSize: 102400KB

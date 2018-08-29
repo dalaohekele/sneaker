@@ -5,8 +5,8 @@ import com.zl.sneakerserver.authorization.resolvers.CurrentUserMethodArgumentRes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -26,7 +26,9 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authorizationInterceptor);
+        InterceptorRegistration ir = registry.addInterceptor(authorizationInterceptor);
+        //配置不拦截的路径
+        ir.excludePathPatterns("/picture/**");
     }
 
     @Override
@@ -34,8 +36,5 @@ public class MvcConfig implements WebMvcConfigurer {
         argumentResolvers.add(currentUserMethodArgumentResolver);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
-        registry.addResourceHandler("/image/**").addResourceLocations("file:/Users/le/Documents/image/");
-    }
+
 }
