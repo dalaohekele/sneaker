@@ -2,23 +2,33 @@ package com.zl.sneakerweb.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zl.sneakerentity.model.ProductInfo;
 import com.zl.sneakerentity.redis.GoodsKey;
 import com.zl.sneakerentity.redis.RedisService;
+import com.zl.sneakerserver.dto.ImageHolder;
 import com.zl.sneakerserver.dto.ProductCategoryDto;
 import com.zl.sneakerserver.dto.ProductInfoDto;
 import com.zl.sneakerserver.server.ProductCategoryServer;
 import com.zl.sneakerserver.server.ProductInfoServer;
+import com.zl.sneakerserver.utils.PathUtil;
 import com.zl.sneakerweb.utils.RequestUtil;
 import com.zl.sneakerweb.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Auther: le
@@ -35,9 +45,12 @@ public class ProductController {
     @Autowired
     ProductInfoServer productInfoServer;
 
+
     @Autowired
     RedisService redisService;
 
+
+    private static final int IMAGEMAXCOUNT = 6;
     /**
      * 查询所有类型
      * @return
@@ -157,5 +170,139 @@ public class ProductController {
             return ResultUtil.fail();
         }
     }
+
+    @PostMapping(value = "/upload")
+    @ResponseBody
+    public Object uploadProductImg(HttpServletRequest request){
+        Map<String, Object> modelMap = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        ProductInfo product = null;
+        String productStr = RequestUtil.getString(request, "productStr");
+        MultipartHttpServletRequest multipartRequest = null;
+        ImageHolder thumbnail = null;
+        List<ImageHolder> productImgList = new ArrayList<>();
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+        try
+        {
+            //检查是否有图片
+            if (multipartResolver.isMultipart(request))
+            {
+                thumbnail = handleImage((MultipartHttpServletRequest) request, productImgList);
+//                System.out.println("图片名字"+thumbnail.getImageName());
+//                System.out.println(productImgList.get(0).getImageName());
+            } else
+            {
+                modelMap.put("success", false);
+                modelMap.put("errorMsg", "上传图片不能为空");
+                return modelMap;
+            }
+        } catch (IOException e)
+        {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.toString());
+            return modelMap;
+        }
+        try
+        {
+            product = mapper.readValue(productStr, ProductInfo.class);
+            modelMap.put("errMsg",product.getProductName());
+        } catch (Exception e)
+        {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.toString());
+            return modelMap;
+        }
+
+//        if (product != null && thumbnail != null && productImgList.size() > 0)
+//        {
+//            try
+//            {
+//                Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
+//                //减少对前端的依赖
+//                Shop shop = new Shop();
+//                shop.setShopId(currentShop.getShopId());
+//                product.setShop(shop);
+//                ProductExecution pe = productService.addProduct(product, thumbnail, productImgList);
+//                if (pe.getState() == ProductStateEnum.SUCCESS.getState())
+//                {
+//                    modelMap.put("success", true);
+//                } else
+//                {
+//                    modelMap.put("success", false);
+//                    modelMap.put("errMsg", pe.getStatInfo());
+//                }
+//            } catch (ProductOperationException e)
+//            {
+//                modelMap.put("success", false);
+//                modelMap.put("errMsg", e.toString());
+//                return modelMap;
+//            }
+//        } else
+//        {
+//            modelMap.put("success", false);
+//            modelMap.put("errMsg", "请输入商品信息");
+//        }
+        return modelMap;
+    }
+
+    private ImageHolder handleImage(MultipartHttpServletRequest request, List<ImageHolder> productImgList) throws IOException
+    {
+        //构建ImageHolder
+        MultipartFile thumbnailFile = request.getFile("thumbnail");
+        ImageHolder thumbnail = new ImageHolder(thumbnailFile.getOriginalFilename(), thumbnailFile.getInputStream());
+        System.out.println(thumbnail.getImageName());
+
+        byte[] bytes=new byte[1024000];
+        InputStream inputStream = thumbnailFile.getInputStream();
+        File dest = new File(PathUtil.getImgBasePath()+"123.jpg");
+        int len= -2;
+        len = inputStream.read(bytes);
+        OutputStream outputStream = new FileOutputStream(dest);
+        outputStream.write(bytes,0,len);
+
+        for (int i = 0; i < IMAGEMAXCOUNT; i++)
+        {
+            MultipartFile productImgFile =request.getFile("productImg" + i);
+            if (productImgFile != null)
+            {
+                ImageHolder productImg = new ImageHolder(productImgFile.getOriginalFilename(), productImgFile.getInputStream());
+                productImgList.add(productImg);
+                System.out.println(productImg.getImageName());
+            } else
+            {
+                break;
+            }
+        }
+        return thumbnail;
+    }
+
+
+    @RequestMapping("/upload2")
+    @ResponseBody
+    public Object handleFileUpload(@RequestParam("file")MultipartFile file){
+        if (file.isEmpty()){
+            return ResultUtil.fail();
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String location =df.format(new Date()) + System.getProperty("file.separator");
+        // 判断文件夹是否存在，不存在则
+        String basePath = PathUtil.getImgBasePath() +System.getProperty("file.separator");
+        File targetFile = new File(basePath + location);
+        if(!targetFile.exists()){
+            targetFile.mkdirs();
+        }
+        String fileName = file.getOriginalFilename();
+        fileName = fileName.length()>10?fileName.substring(fileName.length()-10):fileName;
+        String url ="";
+        try{
+            Files.copy(file.getInputStream(), Paths.get(basePath + location, fileName), StandardCopyOption.REPLACE_EXISTING);
+            url = location + fileName;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
 
 }

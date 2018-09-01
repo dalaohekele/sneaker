@@ -4,10 +4,11 @@ spring:
   aop:
     auto: true
     proxy-target-class: true
-  servlet:
-        multipart:
-          max-file-size: 10Mb
-          max-request-size: 100Mb
+#  servlet:
+#        multipart:
+#          max-file-size: 10Mb
+#          max-request-size: 100Mb
+#          enabled: true
 
   datasource:
         name: product
@@ -58,6 +59,7 @@ spring:
         max-attempts: 3
         max-interval: 10000
         multiplier: 1.0
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

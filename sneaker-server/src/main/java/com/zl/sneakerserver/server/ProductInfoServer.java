@@ -1,6 +1,7 @@
 package com.zl.sneakerserver.server;
 
 import com.zl.sneakerentity.model.ProductInfo;
+import com.zl.sneakerserver.dto.ImageHolder;
 import com.zl.sneakerserver.dto.ProductInfoDto;
 
 import java.util.List;
@@ -24,4 +25,14 @@ public interface ProductInfoServer {
      * @return
      */
     ProductInfo findById(String productId);
+
+
+    /**
+     * 添加商品
+     * @param productInfo
+     * @param thumbnail
+     * @param productImgList
+     * @return
+     */
+    ProductInfoDto addProduct(ProductInfo productInfo, ImageHolder thumbnail, List<ImageHolder> productImgList);
 }

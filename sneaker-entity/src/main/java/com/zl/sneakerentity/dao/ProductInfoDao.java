@@ -47,4 +47,11 @@ public interface ProductInfoDao {
      */
     Integer backProductQuantity(@Param("productId") String productId,
                                 @Param("orderDetailQuantity") Integer orderDetailQuantity);
+
+    /**
+     * 添加商品
+     * @param productInfo
+     * @return
+     */
+    int insertProduct(ProductInfo productInfo);
 }

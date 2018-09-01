@@ -47,5 +47,15 @@
         SET product_stock = product_stock + #{orderDetailQuantity}
         where product_id=#{productId}
     </update>
+
+    <insert id="insertProduct" parameterType="com.zl.sneakerentity.dao.ProductInfoDao">
+        insert into
+        tt_product_info
+        (product_id,product_name,product_price,product_stock,product_description,
+       product_icon,product_status,category_type,create_time,update_time)
+       values
+       (#{productId},#{productName},#{productPrice},#{productStock},#{productDescription},
+       #{productIcon},#{productStatus},#{categoryType},#{createTime},#{updateTime})
+    </insert>
 </mapper>
 

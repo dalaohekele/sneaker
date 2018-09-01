@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.sneakerentity.dao.ProductImgDao">
+    <insert id="batchInsertProductImg" parameterType="java.util.List">
+        insert into
+        tt_product_img(img_addr,img_desc,create_time,prodct_id)
+        values
+        <foreach collection="list" item="prouctImg" separator="," index="index">
+            (
+            #{productImg.imgAddr},
+            #{productImg.imgDesc},
+            #{productImg.createTime},
+            #{productImg.productId}
+            )
+        </foreach>
+    </insert>
+
+
+</mapper>
