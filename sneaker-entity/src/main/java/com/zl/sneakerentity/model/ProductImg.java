@@ -8,18 +8,19 @@ import java.util.Date;
  * @Description:
  */
 public class ProductImg {
-    private String productImgId;
+    private Integer imgId;
     private String imgAddr;
     private String imgDesc;
-    private Date createTime;
     private String productId;
+    private Date createTime;
 
-    public String getProductImgId() {
-        return productImgId;
+
+    public Integer getProductImgId() {
+        return imgId;
     }
 
-    public void setProductImgId(String productImgId) {
-        this.productImgId = productImgId;
+    public void setProductImgId(Integer productImgId) {
+        this.imgId = productImgId;
     }
 
     public String getImgAddr() {

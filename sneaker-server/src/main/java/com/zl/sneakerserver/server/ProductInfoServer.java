@@ -1,5 +1,6 @@
 package com.zl.sneakerserver.server;
 
+import com.zl.sneakerentity.model.ProductImg;
 import com.zl.sneakerentity.model.ProductInfo;
 import com.zl.sneakerserver.dto.ImageHolder;
 import com.zl.sneakerserver.dto.ProductInfoDto;
@@ -26,6 +27,12 @@ public interface ProductInfoServer {
      */
     ProductInfo findById(String productId);
 
+    /**
+     *  通过状态查找, 0正常状态 1轮播图 2热销商品 3新品.
+     * @param productShow
+     * @return
+     */
+    List<ProductInfo> findByShow(Integer productShow);
 
     /**
      * 添加商品
@@ -35,4 +42,18 @@ public interface ProductInfoServer {
      * @return
      */
     ProductInfoDto addProduct(ProductInfo productInfo, ImageHolder thumbnail, List<ImageHolder> productImgList);
+
+    /**
+     * 添加商品图片
+     * @param productImg
+     * @return
+     */
+    int addProductImg(ProductImg productImg);
+
+    /**
+     * 展示商品图片
+     * @param productID
+     * @return
+     */
+    List<ProductImg> findProductImg(String productID);
 }

@@ -65,6 +65,17 @@ public class ProductInfoServerImpl implements ProductInfoServer {
         }
     }
 
+
+    @Override
+    public List<ProductInfo> findByShow(Integer productShow) {
+        try {
+            List<ProductInfo> productInfoList = productInfoDao.findProductByShow(productShow);
+            return productInfoList;
+        }catch (Exception e){
+            throw new ProductInfoException("findByShow 查询失败" + e.getMessage());
+        }
+    }
+
     /**
      * 添加商品
      * @param productInfo
@@ -81,7 +92,12 @@ public class ProductInfoServerImpl implements ProductInfoServer {
             productInfo.setCreateTime(new Date());
             productInfo.setUpdateTime(new Date());
             productInfo.setProductId(productId);
+            //添加商品缩率图
+            if (thumbnail != null) {
+                addThumbnail(productInfo, thumbnail);
+            }
             try {
+                //添加商品信息
                 int effectNum = productInfoDao.insertProduct(productInfo);
                 if (effectNum <=0){
                     return new ProductInfoDto(ProductInfoStateEnum.INNER_ERROE);
@@ -89,6 +105,7 @@ public class ProductInfoServerImpl implements ProductInfoServer {
             }catch (Exception e){
                 throw new ProductInfoException("添加商品失败："+e.getMessage());
             }
+            //添加商品详情图片
             if (productImgList !=null&&productImgList.size()>0){
                 addProductImgList(productInfo,productImgList);
             }
@@ -96,6 +113,26 @@ public class ProductInfoServerImpl implements ProductInfoServer {
         }else {
             return new ProductInfoDto(ProductInfoStateEnum.EMPTY);
         }
+    }
+
+    /**
+     * 添加商品图片
+     * @param productImg
+     * @return
+     */
+    @Override
+    public int addProductImg(ProductImg productImg) {
+        return 0;
+    }
+
+    /**
+     * 展示图片
+     * @param productID
+     * @return
+     */
+    @Override
+    public List<ProductImg> findProductImg(String productID) {
+        return null;
     }
 
 
@@ -122,6 +159,17 @@ public class ProductInfoServerImpl implements ProductInfoServer {
             }
         }
 
+    }
+
+    /**
+     * 添加商品缩略图
+     * @param productInfo
+     * @param thumbnail
+     */
+    private void addThumbnail(ProductInfo productInfo,ImageHolder thumbnail){
+        String dest = PathUtil.getShopImagePath(productInfo.getProductId());
+        String thumbnailAddr = ImageUtil.generateThumbnail(thumbnail, dest);
+        productInfo.setProductIcon(thumbnailAddr);
     }
 
 

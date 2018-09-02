@@ -4,6 +4,7 @@ import com.zl.sneakerserver.dto.ImageHolder;
 import net.coobird.thumbnailator.Thumbnails;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -56,15 +57,14 @@ public class ImageUtil {
     }
 
     /**
-     * 上传图片
+     * 上传详情图片
      * @param thumbnail
      * @param targetAddr
      * @return
      */
     public static String generateNormalImg(ImageHolder thumbnail,String targetAddr){
-//        String datePath = getDatePath(); //文件夹名
         String imageName = getRandomImageName(); //图片名
-        String extension = getFileExtension(thumbnail.getImageName()); //
+        String extension = getFileExtension(thumbnail.getImageName()); //获取文件拓展名
         mkDirPath(targetAddr);
         //相对路径
         String relativeAddr = targetAddr + imageName  + extension;
@@ -74,6 +74,32 @@ public class ImageUtil {
             Thumbnails.of(thumbnail.getImage()).size(337,640)
                     .outputQuality(0.9f).toFile(dest);
         }catch (Exception e){
+            e.printStackTrace();
+        }
+        return relativeAddr;
+    }
+
+    /**
+     * 上传缩略图
+     * @param thumbnail
+     * @param targetAddr
+     * @return
+     */
+    public static String generateThumbnail(ImageHolder thumbnail, String targetAddr) {
+        String realFileName = getRandomImageName(); //图片名
+        String extension = getFileExtension(thumbnail.getImageName()); //获取文件拓展名
+        mkDirPath(targetAddr);
+        //相对路径
+        String relativeAddr = targetAddr + realFileName + extension;
+        File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
+
+        try{
+            Thumbnails.of(thumbnail.getImage()).size(200,200)
+                    .outputQuality(1.0f).toFile(dest);
+// 添加水印图片       .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(basePath + "/watermark.jpg")), 0.25f)
+
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return relativeAddr;

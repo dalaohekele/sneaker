@@ -69,6 +69,10 @@ public enum ResultEnum {
     HEAD_UPDATE_Fail(10020,"头像更新失败"),
 
     SESSION_ERROR(10021,"Session不存在或者已经失效"),
+
+    PRODUCT_IMG_UPDATE_SUCCESS(0,"图片上传成功"),
+
+    PRODUCT_IMG_UPDATE_FAIL(10023,"图片上传失败"),
     ;
 
     private Integer state;

@@ -9,6 +9,7 @@
         <result column="product_description" property="productDescription"/>
         <result column="product_icon" property="productIcon"/>
         <result column="product_status" property="productStatus"/>
+        <result column="product_show" property="productShow"/>
         <result column="category_type" property="categoryType"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -17,7 +18,7 @@
     <!--查询上架商品-->
     <select id="selectByProductCategoryTpye" resultMap="productInfoMap">
     select product_id,product_name,product_price,product_stock,product_description,
-    product_icon,product_status,category_type,create_time,update_time
+    product_icon,product_status,product_show,category_type,create_time,update_time
     from tt_product_info
     where product_status = 0
     and category_type in
@@ -29,9 +30,18 @@
 
     <select id="findProductById" resultMap="productInfoMap">
        select product_id,product_name,product_price,product_stock,product_description,
-       product_icon,product_status,category_type,create_time,update_time
+       product_icon,product_status,product_show,category_type,create_time,update_time
        from tt_product_info
        where product_id=#{productId}
+    </select>
+
+    <!--通过商品展示状态查找商品-->
+    <select id="findProductByShow" resultMap="productInfoMap">
+       select product_id,product_name,product_price,product_stock,product_description,
+       product_icon,product_status,product_show,category_type,create_time,update_time
+       from tt_product_info
+       where product_show=#{productShow}
+      and  product_status = 0
     </select>
 
     <!--订单生成成功 更新库存-->
@@ -52,10 +62,10 @@
         insert into
         tt_product_info
         (product_id,product_name,product_price,product_stock,product_description,
-       product_icon,product_status,category_type,create_time,update_time)
+       product_icon,product_status,category_type,product_show,create_time,update_time)
        values
        (#{productId},#{productName},#{productPrice},#{productStock},#{productDescription},
-       #{productIcon},#{productStatus},#{categoryType},#{createTime},#{updateTime})
+       #{productIcon},#{productStatus},#{categoryType},#{productShow},#{createTime},#{updateTime})
     </insert>
 </mapper>
 

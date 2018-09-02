@@ -30,6 +30,13 @@ public interface ProductInfoDao {
     ProductInfo findProductById(String productId);
 
     /**
+     * 通过商品展示状态查找商品
+     * @param productShow
+     * @return
+     */
+    List<ProductInfo> findProductByShow(Integer productShow);
+
+    /**
      * 根据订单数据减库存
      * @param productId  商品Id
      * @param orderDetailQuantity  商品数量

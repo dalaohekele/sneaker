@@ -3,6 +3,7 @@ package com.zl.sneakerweb.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zl.sneakerentity.enums.ProductInfoStateEnum;
 import com.zl.sneakerentity.model.ProductInfo;
 import com.zl.sneakerentity.redis.GoodsKey;
 import com.zl.sneakerentity.redis.RedisService;
@@ -23,7 +24,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -51,37 +53,39 @@ public class ProductController {
 
 
     private static final int IMAGEMAXCOUNT = 6;
+
     /**
      * 查询所有类型
+     *
      * @return
      */
     @GetMapping("/category/list_all")
-    public Object categoryAll(){
+    public Object categoryAll() {
         try {
-        /**从缓存中读取**/
-        String cacheProductCategory= redisService.get(GoodsKey.getGoodsList,"",String.class);
-        if (!StringUtils.isEmpty(cacheProductCategory)){
-            //string转jsonObject,jsonObject再转实体类对象
-            JSONObject cacheProductCategoryObject =JSONObject.parseObject(cacheProductCategory);
-            ProductCategoryDto cacheProductCategoryDto = JSON.toJavaObject(cacheProductCategoryObject,ProductCategoryDto.class);
-            //拼接缓存中的数据
-            Map<String,Object> cacheMap = new HashMap<>();
-            cacheMap.put("productcategory_list",cacheProductCategoryDto.getProductCategoryList());
-            return ResultUtil.ok(cacheMap);
-        }
+            /**从缓存中读取**/
+            String cacheProductCategory = redisService.get(GoodsKey.getGoodsList, "", String.class);
+            if (!StringUtils.isEmpty(cacheProductCategory)) {
+                //string转jsonObject,jsonObject再转实体类对象
+                JSONObject cacheProductCategoryObject = JSONObject.parseObject(cacheProductCategory);
+                ProductCategoryDto cacheProductCategoryDto = JSON.toJavaObject(cacheProductCategoryObject, ProductCategoryDto.class);
+                //拼接缓存中的数据
+                Map<String, Object> cacheMap = new HashMap<>();
+                cacheMap.put("productcategory_list", cacheProductCategoryDto.getProductCategoryList());
+                return ResultUtil.ok(cacheMap);
+            }
 
             ProductCategoryDto productCategoryDto = productCategoryServer.getProductCategoryAll();
             //存入缓存
             try {
-                redisService.set(GoodsKey.getGoodsList,"",productCategoryDto);
-            }catch (Exception e){
+                redisService.set(GoodsKey.getGoodsList, "", productCategoryDto);
+            } catch (Exception e) {
                 log.error("缓存存入失败 error{}", e.getMessage());
             }
 
-            Map<String,Object> map= new HashMap<>();
-            map.put("productcategory_list",productCategoryDto.getProductCategoryList());
+            Map<String, Object> map = new HashMap<>();
+            map.put("productcategory_list", productCategoryDto.getProductCategoryList());
             return ResultUtil.ok(map);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("商品分类 error{}", e.getMessage());
             return ResultUtil.fail();
         }
@@ -166,14 +170,32 @@ public class ProductController {
             ProductInfo productInfo = productInfoServer.findById(productId);
             return ResultUtil.ok(productInfo);
         } catch (Exception e) {
-            log.error("商品详情获取失败：{}",e.getMessage());
+            log.error("商品详情获取失败：{}", e.getMessage());
             return ResultUtil.fail();
         }
     }
 
+    @GetMapping("/show")
+    @ResponseBody
+    public Object productShow(@RequestParam("product_show") Integer productShow) {
+        try {
+            if(StringUtils.isEmpty(productShow)){
+                return ResultUtil.badArgumentValue();
+            }
+            List<ProductInfo> productInfoList = productInfoServer.findByShow(productShow);
+            return ResultUtil.ok(productInfoList);
+        }catch (Exception e){
+            log.error("商品首页展示详情获取失败：{}", e.getMessage());
+            return ResultUtil.fail();
+        }
+
+
+    }
+
+
     @PostMapping(value = "/upload")
     @ResponseBody
-    public Object uploadProductImg(HttpServletRequest request){
+    public Object uploadProductImg(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         ProductInfo product = null;
@@ -182,94 +204,70 @@ public class ProductController {
         ImageHolder thumbnail = null;
         List<ImageHolder> productImgList = new ArrayList<>();
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-        try
-        {
+        try {
             //检查是否有图片
-            if (multipartResolver.isMultipart(request))
-            {
+            if (multipartResolver.isMultipart(request)) {
                 thumbnail = handleImage((MultipartHttpServletRequest) request, productImgList);
 //                System.out.println("图片名字"+thumbnail.getImageName());
 //                System.out.println(productImgList.get(0).getImageName());
-            } else
-            {
+            } else {
                 modelMap.put("success", false);
                 modelMap.put("errorMsg", "上传图片不能为空");
                 return modelMap;
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             modelMap.put("success", false);
             modelMap.put("errMsg", e.toString());
             return modelMap;
         }
-        try
-        {
+        try {
             product = mapper.readValue(productStr, ProductInfo.class);
-            modelMap.put("errMsg",product.getProductName());
-        } catch (Exception e)
-        {
+            modelMap.put("data", product);
+        } catch (Exception e) {
             modelMap.put("success", false);
             modelMap.put("errMsg", e.toString());
             return modelMap;
         }
 
-//        if (product != null && thumbnail != null && productImgList.size() > 0)
-//        {
-//            try
-//            {
-//                Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-//                //减少对前端的依赖
-//                Shop shop = new Shop();
-//                shop.setShopId(currentShop.getShopId());
-//                product.setShop(shop);
-//                ProductExecution pe = productService.addProduct(product, thumbnail, productImgList);
-//                if (pe.getState() == ProductStateEnum.SUCCESS.getState())
-//                {
-//                    modelMap.put("success", true);
-//                } else
-//                {
-//                    modelMap.put("success", false);
-//                    modelMap.put("errMsg", pe.getStatInfo());
-//                }
-//            } catch (ProductOperationException e)
-//            {
-//                modelMap.put("success", false);
-//                modelMap.put("errMsg", e.toString());
-//                return modelMap;
-//            }
-//        } else
-//        {
-//            modelMap.put("success", false);
-//            modelMap.put("errMsg", "请输入商品信息");
-//        }
+        if (product != null && thumbnail != null && productImgList.size() > 0)
+        {
+            try
+            {
+                ProductInfoDto pe = productInfoServer.addProduct(product, thumbnail, productImgList);
+                if (pe.getState() == ProductInfoStateEnum.SUCCESS.getState())
+                {
+                    modelMap.put("success", true);
+                } else
+                {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", pe.getStateInfo());
+                }
+            } catch (Exception e)
+            {
+                modelMap.put("success", false);
+                modelMap.put("errMsg", e.toString());
+                return modelMap;
+            }
+        } else
+        {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "请输入商品信息");
+        }
         return modelMap;
     }
 
-    private ImageHolder handleImage(MultipartHttpServletRequest request, List<ImageHolder> productImgList) throws IOException
-    {
-        //构建ImageHolder
+    private ImageHolder handleImage(MultipartHttpServletRequest request, List<ImageHolder> productImgList) throws IOException {
+        //商品缩略图
         MultipartFile thumbnailFile = request.getFile("thumbnail");
         ImageHolder thumbnail = new ImageHolder(thumbnailFile.getOriginalFilename(), thumbnailFile.getInputStream());
-        System.out.println(thumbnail.getImageName());
 
-        byte[] bytes=new byte[1024000];
-        InputStream inputStream = thumbnailFile.getInputStream();
-        File dest = new File(PathUtil.getImgBasePath()+"123.jpg");
-        int len= -2;
-        len = inputStream.read(bytes);
-        OutputStream outputStream = new FileOutputStream(dest);
-        outputStream.write(bytes,0,len);
-
-        for (int i = 0; i < IMAGEMAXCOUNT; i++)
-        {
-            MultipartFile productImgFile =request.getFile("productImg" + i);
-            if (productImgFile != null)
-            {
+        //商品详情图
+        for (int i = 0; i < IMAGEMAXCOUNT; i++) {
+            MultipartFile productImgFile = request.getFile("productImg" + i);
+            if (productImgFile != null) {
                 ImageHolder productImg = new ImageHolder(productImgFile.getOriginalFilename(), productImgFile.getInputStream());
                 productImgList.add(productImg);
-                System.out.println(productImg.getImageName());
-            } else
-            {
+            } else {
                 break;
             }
         }
@@ -279,25 +277,25 @@ public class ProductController {
 
     @RequestMapping("/upload2")
     @ResponseBody
-    public Object handleFileUpload(@RequestParam("file")MultipartFile file){
-        if (file.isEmpty()){
+    public Object handleFileUpload(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
             return ResultUtil.fail();
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String location =df.format(new Date()) + System.getProperty("file.separator");
+        String location = df.format(new Date()) + System.getProperty("file.separator");
         // 判断文件夹是否存在，不存在则
-        String basePath = PathUtil.getImgBasePath() +System.getProperty("file.separator");
+        String basePath = PathUtil.getImgBasePath() + System.getProperty("file.separator");
         File targetFile = new File(basePath + location);
-        if(!targetFile.exists()){
+        if (!targetFile.exists()) {
             targetFile.mkdirs();
         }
         String fileName = file.getOriginalFilename();
-        fileName = fileName.length()>10?fileName.substring(fileName.length()-10):fileName;
-        String url ="";
-        try{
+        fileName = fileName.length() > 10 ? fileName.substring(fileName.length() - 10) : fileName;
+        String url = "";
+        try {
             Files.copy(file.getInputStream(), Paths.get(basePath + location, fileName), StandardCopyOption.REPLACE_EXISTING);
             url = location + fileName;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

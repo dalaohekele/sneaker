@@ -16,4 +16,11 @@ public interface ProductImgDao {
      * @return
      */
     int batchInsertProductImg(List<ProductImg> productImgList);
+
+    /**
+     * 通过商品id查询图片
+     * @param productId
+     * @return
+     */
+    ProductImg selectImgById(String productId);
 }

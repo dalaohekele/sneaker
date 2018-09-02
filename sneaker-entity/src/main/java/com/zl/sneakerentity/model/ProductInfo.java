@@ -31,12 +31,23 @@ public class ProductInfo {
     /** 状态, 0正常1下架. */
     private Integer productStatus;
 
+    /** 状态, 0正常状态 1轮播图 2热销商品 3新品. */
+    private Integer productShow;
+
     /** 类目编号. */
     private Integer categoryType;
 
     private Date createTime;
 
     private Date updateTime;
+
+    public Integer getProductShow() {
+        return productShow;
+    }
+
+    public void setProductShow(Integer productShow) {
+        this.productShow = productShow;
+    }
 
     public String getProductId() {
         return productId;
