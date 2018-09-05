@@ -22,7 +22,6 @@ public class ResultUtil {
         Map<String,Object> obj = new HashMap<String,Object>();
         obj.put("errCode",0);
         obj.put("success",true);
-        obj.put("errMsg","成功");
         obj.put("data",data);
         return obj;
     }

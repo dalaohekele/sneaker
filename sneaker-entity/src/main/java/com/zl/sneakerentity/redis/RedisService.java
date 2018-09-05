@@ -109,6 +109,25 @@ public class RedisService {
     }
 
     /**
+     * 判断key对应的value是否存在
+     * @param prefix
+     * @param key
+     * @param field
+     * @return
+     */
+    public boolean existsValue(KeyPrefix prefix,String key,String field){
+        Jedis jedis = new Jedis();
+        try {
+            jedis = jedisPool.getResource();
+            String realkey = prefix.getPrefix() + key;
+            Boolean result = jedis.hexists(realkey,field);
+            return result;
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
      * 增加值
      * @param prefix
      * @param key
@@ -139,6 +158,45 @@ public class RedisService {
             jedis = jedisPool.getResource();
             String realKey = prefix.getPrefix()+key;
             return jedis.decr(realKey);
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 返回指定字段的值
+     * @param prefix
+     * @param key
+     * @param filed
+     * @param <T>
+     * @return
+     */
+    public <T> String hget(KeyPrefix prefix,String key,String filed){
+        Jedis jedis = new Jedis();
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix()+key;
+            return jedis.hget(realKey,filed);
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     *
+     * @param prefix
+     * @param key
+     * @param field
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public<T> Long hset(KeyPrefix prefix,String key,String field,String value){
+        Jedis jedis = new Jedis();
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix()+key;
+            return jedis.hset(realKey,field,value);
         }finally {
             returnToPool(jedis);
         }
