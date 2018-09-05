@@ -28,7 +28,12 @@ public class CartController {
     @Autowired
     private CartServer cartServer;
 
-
+    /**
+     * 添加购物车
+     * @param reqMap
+     * @param user
+     * @return
+     */
     @PostMapping(value = "/add")
     @Autorization
     public Object addCartController(@RequestBody Map<String,String> reqMap,

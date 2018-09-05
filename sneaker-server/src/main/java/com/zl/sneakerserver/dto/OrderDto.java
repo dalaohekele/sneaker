@@ -83,7 +83,6 @@ public class OrderDto{
     @JsonProperty("update_time")
     private Date updateTime;
 
-
     @JsonProperty("order_detailList")
     private List<OrderDetail> orderDetailList;
 
