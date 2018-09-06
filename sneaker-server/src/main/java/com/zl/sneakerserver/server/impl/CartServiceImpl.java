@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class CartServiceImpl implements CartService {
             //获取现有的购物车中的数据
             String json = redisService.hget(CartPrefix.getCartList,userId,productId);
             if (json !=null){
+                //转换为java实体类
                 CartDto cartDto = JSON.toJavaObject(JSONObject.parseObject(json),CartDto.class);
                 cartDto.setProductNum(cartDto.getProductNum()+num);
                 redisService.hset(CartPrefix.getCartList,userId,productId,JSON.toJSON(cartDto).toString());
@@ -62,28 +64,85 @@ public class CartServiceImpl implements CartService {
         return 1;
     }
 
+    /**
+     * 展示购物车
+     * @param userId
+     * @return
+     */
     @Override
     public List<CartDto> getCartList(String userId) {
-        return null;
+        List<String> jsonList = redisService.hvals(CartPrefix.getCartList,userId);
+        List<CartDto> cartDtoList = new ArrayList<>();
+        for (String json:jsonList){
+            CartDto cartDto = JSON.toJavaObject(JSONObject.parseObject(json),CartDto.class);
+            cartDtoList.add(cartDto);
+        }
+        return cartDtoList;
     }
 
+    /**
+     * 更新数量
+     * @param userId
+     * @param productId
+     * @param num
+     * @return
+     */
     @Override
-    public int updateCartNum(String userId, String productId, int num, String checked) {
-        return 0;
+    public int updateCartNum(String userId, String productId, int num) {
+        String json = redisService.hget(CartPrefix.getCartList,userId,productId);
+        if (json==null){
+            return 0;
+        }
+        CartDto cartDto = JSON.toJavaObject(JSONObject.parseObject(json),CartDto.class);
+        cartDto.setProductNum(num);
+        redisService.hset(CartPrefix.getCartList,userId,productId,JSON.toJSON(cartDto).toString());
+        return 1;
     }
 
+    /**
+     * 全选商品
+     * @param userId
+     * @param checked
+     * @return
+     */
     @Override
     public int checkAll(String userId, String checked) {
-        return 0;
+        //获取商品列表
+        List<String> jsonList = redisService.hvals(CartPrefix.getCartList,userId);
+        for (String json:jsonList){
+            CartDto cartDto = JSON.toJavaObject(JSONObject.parseObject(json),CartDto.class);
+            if ("true".equals(checked)){
+                cartDto.setCheck("1");
+            }else if ("false".equals(checked)){
+                cartDto.setCheck("0");
+            }else {
+                return 0;
+            }
+            redisService.hset(CartPrefix.getCartList,userId,cartDto.getProductId(),JSON.toJSON(cartDto).toString());
+        }
+        return 1;
     }
 
+    /**
+     * 删除商品
+     * @param userId
+     * @param productId
+     * @return
+     */
     @Override
     public int delCartProduct(String userId, String productId) {
-        return 0;
+        redisService.hdel(CartPrefix.getCartList,userId,productId);
+        return 1;
     }
 
+    /**
+     * 清空购物车
+     * @param userId
+     * @return
+     */
     @Override
     public int delCart(String userId) {
-        return 0;
+        redisService.delete(CartPrefix.getCartList,userId);
+        return 1;
     }
 }

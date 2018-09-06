@@ -34,7 +34,7 @@ public interface CartService {
      * @param num
      * @return
      */
-    int updateCartNum(String userId,String productId,int num,String checked);
+    int updateCartNum(String userId,String productId,int num);
 
     /**
      * 全选

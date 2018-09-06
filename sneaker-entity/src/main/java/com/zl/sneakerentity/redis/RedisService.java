@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+
 /**
  * redis服务
  */
@@ -201,6 +203,42 @@ public class RedisService {
             returnToPool(jedis);
         }
     }
+
+    /**
+     * 获取列表数值
+     * @param prefix
+     * @param key
+     * @return
+     */
+    public List<String> hvals(KeyPrefix prefix,String key){
+        Jedis jedis = new Jedis();
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix()+key;
+            return jedis.hvals(realKey);
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 删除值
+     * @param prefix
+     * @param key
+     * @param field
+     * @return
+     */
+    public Long hdel(KeyPrefix prefix,String key,String field){
+        Jedis jedis = new Jedis();
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix()+key;
+            return jedis.hdel(realKey,field);
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
 
 
     public static <T> String beanToString(T value){

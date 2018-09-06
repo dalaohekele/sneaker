@@ -10,8 +10,6 @@ import java.math.BigDecimal;
  */
 
 public class CartDto implements Serializable {
-    private Integer state;
-    private String stateInfo;
 
     private String productId;
     private BigDecimal productPrice;
@@ -33,21 +31,6 @@ public class CartDto implements Serializable {
         this.check = checkAll;
     }
 
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getStateInfo() {
-        return stateInfo;
-    }
-
-    public void setStateInfo(String stateInfo) {
-        this.stateInfo = stateInfo;
-    }
 
     public String getProductId() {
         return productId;
