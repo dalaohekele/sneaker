@@ -11,6 +11,7 @@ import java.util.Map;
  * @Description:
  */
 public class ResultUtil {
+
     public static Object ok(){
         Map<String,Object> obj = new HashMap<>();
         obj.put("errCode",0);
