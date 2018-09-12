@@ -86,9 +86,9 @@ public class UserServerImpl implements UserServer {
             User newUser = new User();
             newUser.setId(userId);
             newUser.setPassWord(password);
+            newUser.setUserName(openId);
             newUser.setWxOpenId(openId);
             newUser.setRole(1);  //1为卖家，2为管理员
-            newUser.setWxOpenId(openId);
 
             int effectNum = userDao.insertUser(newUser);
             if (effectNum <= 0) {

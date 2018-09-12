@@ -16,14 +16,14 @@
     <insert id="insertOrderDetail" parameterType="com.zl.sneakerentity.model.OrderDetail">
         INSERT into
         tt_order_detail(detail_id,order_id,product_id,product_name,product_price,product_quantity,
-        product_icon)
+        product_icon,create_time,update_time)
         values (#{detailId},#{orderId},#{productId},#{productName},#{productPrice},#{productQuantity},
-        #{productIcon})
+        #{productIcon},#{createTime},#{updateTime})
     </insert>
 
     <!--通过orderid获取订单概述-->
     <select id="selectOrderDetailList" resultMap="orderDetailMapper">
-        select detail_id,order_id,product_id,product_name,product_price,product_quantity,product_icon
+        select detail_id,order_id,product_id,product_name,product_price,product_quantity,product_icon,create_time,update_time
         from tt_order_detail
         where order_id=#{orderId}
     </select>

@@ -131,8 +131,11 @@ public class OrderServerImpl implements OrderServer {
         OrderDto orderDto = new OrderDto();
         try {
             List<OrderMaster> orderMasterList = orderMasterDao.selectOrderMasterByOpenid(buyerOpenId, rowIndex, pageSize);
+            String orderId = orderMasterList.get(0).getOrderId();
+            List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList(orderId);
             //返回数据
-            orderDto.setOrderMasterList(orderMasterList);
+//            orderDto.setOrderMasterList(orderMasterList);
+            orderDto.setOrderDetailList(orderDetailList);
         } catch (Exception e) {
             throw new OrderException("运单查找失败 error:" + e.getMessage());
         }

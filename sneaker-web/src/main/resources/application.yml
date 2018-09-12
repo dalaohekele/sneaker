@@ -18,6 +18,10 @@ spring:
           max-file-size: 10Mb
           max-request-size: 100Mb
           enabled: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

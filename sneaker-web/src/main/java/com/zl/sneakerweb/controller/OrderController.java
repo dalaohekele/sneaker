@@ -109,7 +109,7 @@ public class OrderController {
             //获取数据
             OrderDto orderDto = orderServer.findListByOpenId(openid, page, size);
             //只需要返回订单详情即可
-            return ResultUtil.ok(orderDto.getOrderMasterList());
+            return ResultUtil.ok(orderDto.getOrderDetailList());
         } catch (Exception e) {
             log.error("订单列表查询失败:{}", e.getMessage());
             return ResultUtil.fail(OrderStatusEnum.FAIL.getState(),e.getMessage());

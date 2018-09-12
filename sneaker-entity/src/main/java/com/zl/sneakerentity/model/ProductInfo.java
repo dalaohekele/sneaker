@@ -113,6 +113,7 @@ public class ProductInfo {
         this.categoryType = categoryType;
     }
 
+
     public Date getCreateTime() {
         return createTime;
     }
