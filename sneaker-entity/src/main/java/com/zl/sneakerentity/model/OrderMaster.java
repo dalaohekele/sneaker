@@ -61,6 +61,10 @@ public class OrderMaster {
      */
     private Date updateTime;
 
+    /* 用来构造 订单详情数据*/
+    private OrderDetail orderDetail;
+
+
     public String getOrderId() {
         return orderId;
     }
@@ -139,5 +143,13 @@ public class OrderMaster {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public OrderDetail getOrderDetail() {
+        return orderDetail;
+    }
+
+    public void setOrderDetail(OrderDetail orderDetail) {
+        this.orderDetail = orderDetail;
     }
 }

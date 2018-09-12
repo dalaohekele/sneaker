@@ -40,6 +40,7 @@ public class OrderDetailTest {
     }
 
     @Test
+    @Ignore
     public void selectOrderDetailListTest(){
         List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList("1533276908006684900");
         System.out.println(orderDetailList.get(0).getProductName());

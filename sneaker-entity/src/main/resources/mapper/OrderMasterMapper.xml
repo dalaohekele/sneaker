@@ -12,6 +12,12 @@
         <result column="pay_status" property="payStatus"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
+        <association property="orderDetail" javaType="com.zl.sneakerentity.model.OrderDetail">
+            <result column="product_id" property="productId" />
+            <result column="product_name" property="productName" />
+            <result column="product_icon" property="productIcon"/>
+            <result column="product_price" property="productPrice"/>
+        </association>
     </resultMap>
 
     <!--订单详情-->
@@ -28,6 +34,16 @@
       select order_id,buyer_name,buyer_phone,buyer_address,buyer_openid,order_amount,
       order_status,pay_status,create_time,update_time
       from tt_order_master
+      where buyer_openid=#{openid}
+      order by create_time desc
+      LIMIT #{rowIndex},#{pageSize};
+    </select>
+
+    <!--通过id查询订单中商品详情-->
+    <select id="selectOrderDetailByOpenid" resultMap="orderMasterMapper">
+      SELECT a.order_id,a.order_amount,a.order_status,a.pay_status,b.product_id,b.product_name,b.product_icon,b.product_price,a.create_time,a.update_time FROM tt_order_master a
+      right JOIN tt_order_detail b
+      on a.order_id = b.order_id
       where buyer_openid=#{openid}
       order by create_time desc
       LIMIT #{rowIndex},#{pageSize};

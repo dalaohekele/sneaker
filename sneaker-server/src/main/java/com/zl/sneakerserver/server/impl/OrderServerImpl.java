@@ -131,11 +131,8 @@ public class OrderServerImpl implements OrderServer {
         OrderDto orderDto = new OrderDto();
         try {
             List<OrderMaster> orderMasterList = orderMasterDao.selectOrderMasterByOpenid(buyerOpenId, rowIndex, pageSize);
-            String orderId = orderMasterList.get(0).getOrderId();
-            List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList(orderId);
             //返回数据
-//            orderDto.setOrderMasterList(orderMasterList);
-            orderDto.setOrderDetailList(orderDetailList);
+            orderDto.setOrderMasterList(orderMasterList);
         } catch (Exception e) {
             throw new OrderException("运单查找失败 error:" + e.getMessage());
         }
@@ -159,6 +156,29 @@ public class OrderServerImpl implements OrderServer {
             throw new OrderException("通过orderid查询 error:" + e.getMessage());
         }
         return orderdto;
+    }
+
+    /**
+     * 通过id查询订单中商品详情
+     * @param buyerOpenId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @Override
+    @Transactional
+    public OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize){
+        //分页数
+        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+        OrderDto orderDto = new OrderDto();
+        try {
+            List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
+            //返回数据
+            orderDto.setOrderMasterList(orderMasterList);
+        } catch (Exception e) {
+            throw new OrderException("运单查找失败 error:" + e.getMessage());
+        }
+        return orderDto;
     }
 
     /**

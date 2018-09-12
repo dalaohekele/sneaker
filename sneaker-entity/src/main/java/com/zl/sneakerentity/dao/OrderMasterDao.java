@@ -29,6 +29,16 @@ public interface OrderMasterDao {
 
 
     /**
+     *通过id查询订单中商品详情
+     * @param buyerOpenid
+     * @param rowIndex
+     * @param pageSize
+     * @return
+     */
+    List<OrderMaster> selectOrderDetailByOpenid(@Param("openid") String buyerOpenid,
+                                                @Param("rowIndex")Integer rowIndex,
+                                                @Param("pageSize")Integer pageSize);
+    /**
      * 通过Id 查找详情
      * @param orderId
      * @return

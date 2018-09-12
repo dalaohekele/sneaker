@@ -109,13 +109,34 @@ public class OrderController {
             //获取数据
             OrderDto orderDto = orderServer.findListByOpenId(openid, page, size);
             //只需要返回订单详情即可
-            return ResultUtil.ok(orderDto.getOrderDetailList());
+            return ResultUtil.ok(orderDto.getOrderMasterList());
         } catch (Exception e) {
             log.error("订单列表查询失败:{}", e.getMessage());
             return ResultUtil.fail(OrderStatusEnum.FAIL.getState(),e.getMessage());
         }
     }
 
+    @GetMapping("/list/detail")
+    @Autorization
+    public Object listDetail(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                       @RequestParam(value = "size", defaultValue = "10") Integer size,
+                       @CurrentUser User user) {
+
+        try {
+            String openid = user.getId();
+            if (StringUtils.isEmpty(openid)) {
+                log.error("【查询订单列表】openid为空");
+                return ResultUtil.badArgumentValue();
+            }
+            //获取数据
+            OrderDto orderDto = orderServer.findDetailsByOpenId(openid, page, size);
+            //只需要返回订单详情即可
+            return ResultUtil.ok(orderDto.getOrderMasterList());
+        } catch (Exception e) {
+            log.error("订单列表查询失败:{}", e.getMessage());
+            return ResultUtil.fail(OrderStatusEnum.FAIL.getState(),e.getMessage());
+        }
+    }
     /**
      * 取消订单
      *
@@ -178,5 +199,7 @@ public class OrderController {
             return ResultUtil.fail();
         }
     }
+
+
 
 }

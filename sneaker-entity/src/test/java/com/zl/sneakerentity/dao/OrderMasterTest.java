@@ -49,6 +49,12 @@ public class OrderMasterTest {
     }
 
     @Test
+    public void selectOrderDetailByOpenidTest(){
+        List<OrderMaster> orderMaster = orderMasterDao.selectOrderDetailByOpenid("1534325856245904736",1,1);
+        System.out.println(orderMaster.get(0));
+    }
+
+    @Test
     @Ignore
     public void selectOpenIdandOrderIdTest(){
         Integer effectNum = orderMasterDao.selectOpenIdandOrderId("111zzzz","1533020341704620021");
