@@ -8,6 +8,7 @@ import com.zl.sneakerentity.model.OrderDetail;
 import com.zl.sneakerentity.model.User;
 import com.zl.sneakerserver.authorization.annotatiaon.Autorization;
 import com.zl.sneakerserver.authorization.annotatiaon.CurrentUser;
+import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.server.OrderServer;
 import com.zl.sneakerweb.utils.RequestUtil;
@@ -116,9 +117,16 @@ public class OrderController {
         }
     }
 
+    /**
+     * 订单详情列表
+     *
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/list/detail")
     @Autorization
-    public Object listDetail(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public Object listDetailByUserId(@RequestParam(value = "page", defaultValue = "0") Integer page,
                        @RequestParam(value = "size", defaultValue = "10") Integer size,
                        @CurrentUser User user) {
 
@@ -129,14 +137,37 @@ public class OrderController {
                 return ResultUtil.badArgumentValue();
             }
             //获取数据
-            OrderDto orderDto = orderServer.findDetailsByOpenId(openid, page, size);
+            List<OrderDetailDto> orderDetailDto = orderServer.findDetailById(openid, page, size);
             //只需要返回订单详情即可
-            return ResultUtil.ok(orderDto.getOrderMasterList());
+            return ResultUtil.ok(orderDetailDto);
         } catch (Exception e) {
             log.error("订单列表查询失败:{}", e.getMessage());
             return ResultUtil.fail(OrderStatusEnum.FAIL.getState(),e.getMessage());
         }
     }
+
+//    /**订单详情列表 已弃用**/
+//    @GetMapping("/list_detail")
+//    @Autorization
+//    public Object listDetail(@RequestParam(value = "page", defaultValue = "0") Integer page,
+//                       @RequestParam(value = "size", defaultValue = "10") Integer size,
+//                       @CurrentUser User user) {
+//
+//        try {
+//            String openid = user.getId();
+//            if (StringUtils.isEmpty(openid)) {
+//                log.error("【查询订单列表】openid为空");
+//                return ResultUtil.badArgumentValue();
+//            }
+//            //获取数据
+//            OrderDto orderDto = orderServer.findDetailsByOpenId(openid, page, size);
+//            //只需要返回订单详情即可
+//            return ResultUtil.ok(orderDto.getOrderMasterList());
+//        } catch (Exception e) {
+//            log.error("订单列表查询失败:{}", e.getMessage());
+//            return ResultUtil.fail(OrderStatusEnum.FAIL.getState(),e.getMessage());
+//        }
+//    }
     /**
      * 取消订单
      *

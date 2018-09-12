@@ -10,6 +10,7 @@ import com.zl.sneakerentity.enums.ResultEnum;
 import com.zl.sneakerentity.model.OrderDetail;
 import com.zl.sneakerentity.model.OrderMaster;
 import com.zl.sneakerentity.model.ProductInfo;
+import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.exceptions.OrderException;
 import com.zl.sneakerserver.server.OrderServer;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -158,28 +160,29 @@ public class OrderServerImpl implements OrderServer {
         return orderdto;
     }
 
-    /**
-     * 通过id查询订单中商品详情
-     * @param buyerOpenId
-     * @param pageIndex
-     * @param pageSize
-     * @return
-     */
-    @Override
-    @Transactional
-    public OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize){
-        //分页数
-        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
-        OrderDto orderDto = new OrderDto();
-        try {
-            List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
-            //返回数据
-            orderDto.setOrderMasterList(orderMasterList);
-        } catch (Exception e) {
-            throw new OrderException("运单查找失败 error:" + e.getMessage());
-        }
-        return orderDto;
-    }
+
+//    /**已废弃的方法
+//     * 通过id查询订单中商品详情
+//     * @param buyerOpenId
+//     * @param pageIndex
+//     * @param pageSize
+//     * @return
+//     */
+//    @Override
+//    @Transactional
+//    public OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize){
+//        //分页数
+//        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+//        OrderDto orderDto = new OrderDto();
+//        try {
+//            List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
+//            //返回数据
+//            orderDto.setOrderMasterList(orderMasterList);
+//        } catch (Exception e) {
+//            throw new OrderException("运单查找失败 error:" + e.getMessage());
+//        }
+//        return orderDto;
+//    }
 
     /**
      * 取消订单
@@ -249,6 +252,37 @@ public class OrderServerImpl implements OrderServer {
             throw new OrderException("判断openid与orderid错误 error: " + e.getMessage());
         }
         return orderDto;
+    }
+
+    @Override
+    public List<OrderDetailDto> findDetailById(String buyerOpenId, Integer pageIndex, Integer pageSize) {
+        //分页数
+        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+        List<OrderDetailDto> orderDetailDtoList = new ArrayList<>();
+        try {
+            OrderDetailDto orderDetailDto = new OrderDetailDto();
+            List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
+            for(OrderMaster orderMaster :orderMasterList){
+                String orderId = orderMaster.getOrderId();
+                List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList(orderId);
+
+                orderDetailDto.setOrderId(orderId);
+                orderDetailDto.setPayStatus(orderMaster.getPayStatus());
+                orderDetailDto.setOrderStatus(orderMaster.getOrderStatus());
+                orderDetailDto.setOrderAmount(orderMaster.getOrderAmount());
+                orderDetailDto.setCreateTime(orderMaster.getCreateTime());
+                orderDetailDto.setUpdateTime(orderMaster.getUpdateTime());
+                orderDetailDto.setDetailList(orderDetailList);
+
+                orderDetailDtoList.add(orderDetailDto);
+            }
+
+            //返回数据
+
+        } catch (Exception e) {
+            throw new OrderException("运单查找失败 error:" + e.getMessage());
+        }
+        return orderDetailDtoList;
     }
 
 }

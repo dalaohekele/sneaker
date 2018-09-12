@@ -1,6 +1,9 @@
 package com.zl.sneakerserver.server;
 
+import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
+
+import java.util.List;
 
 /**
  * @Auther: le
@@ -27,14 +30,14 @@ public interface OrderServer {
      */
     OrderDto findListByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize);
 
-    /**
-     * 通过id查询订单中商品详情
-     * @param buyerOpenId
-     * @param pageIndex
-     * @param pageSize
-     * @return
-     */
-    OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize);
+//    /**
+//     * 通过id查询订单中商品详情
+//     * @param buyerOpenId
+//     * @param pageIndex
+//     * @param pageSize
+//     * @return
+//     */
+//    OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize);
 
     /**
      * 通过Id查找运单
@@ -59,4 +62,9 @@ public interface OrderServer {
      * @return
      */
     OrderDto witherOrderIdEqualsOpenid(String openId,String orderId);
+
+    /**
+     *     通过id查询订单中商品详情
+     */
+    List<OrderDetailDto> findDetailById(String buyerOpenId, Integer pageIndex, Integer pageSize);
 }

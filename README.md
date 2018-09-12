@@ -10,6 +10,7 @@
 [上传图片显示--博客详解](https://blog.csdn.net/zxc19854/article/details/82352589) 
 [不使用shrio，使用redis进行鉴权认证--博客详解](https://blog.csdn.net/zxc19854/article/details/82352792)  
 [rabbitmq异步下单--博客详解（未完成）]()  
+[mybatis多表联合查询--博客未完成]()  
 [数据来源--scrapy爬虫博客详解（未完成）--爬虫还没写]()  
 > 注意已知缺陷：  
 **1、controller层中，使用Object作为返回对象的做法不推荐。因改造比较费时，且并不影响使用，所以在本项目中并不打算改造**
