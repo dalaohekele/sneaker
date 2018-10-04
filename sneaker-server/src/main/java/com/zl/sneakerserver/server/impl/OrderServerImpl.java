@@ -149,15 +149,20 @@ public class OrderServerImpl implements OrderServer {
      */
     @Override
     @Transactional
-    public OrderDto findByOrderId(String orderId,String userId) {
-        OrderDto orderdto = new OrderDto();
+    public OrderDetailDto findByOrderId(String orderId,String userId) {
         try {
+            OrderDetailDto orderDetailDto = new OrderDetailDto();
             OrderMaster orderMaster = orderMasterDao.selectByOrderId(orderId,userId);
-            orderdto.setOrderMaster(orderMaster);
+            List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList(orderId);
+
+            orderDetailDto.setOrderMaster(orderMaster);
+            orderDetailDto.setDetailList(orderDetailList);
+
+            return orderDetailDto;
         } catch (Exception e) {
             throw new OrderException("通过orderid查询 error:" + e.getMessage());
         }
-        return orderdto;
+
     }
 
 
@@ -254,18 +259,28 @@ public class OrderServerImpl implements OrderServer {
         return orderDto;
     }
 
+    /**
+     * 通过id查询订单中商品详情
+     * @param buyerOpenId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     @Override
     public List<OrderDetailDto> findDetailById(String buyerOpenId, Integer pageIndex, Integer pageSize) {
         //分页数
         int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
-        List<OrderDetailDto> orderDetailDtoList = new ArrayList<>();
         try {
-            OrderDetailDto orderDetailDto = new OrderDetailDto();
+            List<OrderDetailDto> orderDetailDtoList = new ArrayList<>();
+            //关联查询ordermaster和orderdetail
             List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
+            //获取orderMaster中需要返回的值 赋值给新定义的pojo类orderDetailDto
             for(OrderMaster orderMaster :orderMasterList){
+                OrderDetailDto orderDetailDto = new OrderDetailDto();
+
                 String orderId = orderMaster.getOrderId();
                 List<OrderDetail> orderDetailList = orderDetailDao.selectOrderDetailList(orderId);
-
+                //添加订单详情的值
                 orderDetailDto.setOrderId(orderId);
                 orderDetailDto.setPayStatus(orderMaster.getPayStatus());
                 orderDetailDto.setOrderStatus(orderMaster.getOrderStatus());
@@ -277,12 +292,10 @@ public class OrderServerImpl implements OrderServer {
                 orderDetailDtoList.add(orderDetailDto);
             }
 
-            //返回数据
-
+            return orderDetailDtoList;
         } catch (Exception e) {
-            throw new OrderException("运单查找失败 error:" + e.getMessage());
+            throw new OrderException("运单查找失败findDetailById error:" + e.getMessage());
         }
-        return orderDetailDtoList;
     }
 
 }

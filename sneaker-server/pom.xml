@@ -12,7 +12,6 @@
         <groupId>com.zl</groupId>
         <artifactId>sneaker</artifactId>
         <version>1.0.0RELEASE</version>
-        <!--<relativePath/>-->
         <relativePath>../pom.xml</relativePath><!-- lookup parent from repository -->
     </parent>
 

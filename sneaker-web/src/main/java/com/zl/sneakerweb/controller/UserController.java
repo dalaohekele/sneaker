@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.zl.sneakerentity.enums.ResultEnum;
 import com.zl.sneakerentity.model.User;
 import com.zl.sneakerentity.redis.RedisService;
+import com.zl.sneakerserver.authorization.annotatiaon.AdminUser;
 import com.zl.sneakerserver.authorization.annotatiaon.Autorization;
-import com.zl.sneakerserver.authorization.annotatiaon.CurrentUser;
 import com.zl.sneakerserver.config.Constants;
 import com.zl.sneakerserver.dto.TokenModel;
 import com.zl.sneakerserver.dto.UserDto;
@@ -109,9 +109,9 @@ public class UserController {
      */
     @GetMapping("/info")
     @Autorization
-    public Object userListController(@CurrentUser User user) {
+    public Object userListController(@AdminUser User user) {
+        //校验token
         tokenManager.getToken(user.getId());
-
         return ResultUtil.ok(user);
     }
 

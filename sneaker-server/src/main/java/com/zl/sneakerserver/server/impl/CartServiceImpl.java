@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartDto> getCartList(String userId) {
         List<String> jsonList = redisService.hvals(CartPrefix.getCartList,userId);
-        List<CartDto> cartDtoList = new ArrayList<>();
+        List<CartDto> cartDtoList = new LinkedList<>();
         for (String json:jsonList){
             CartDto cartDto = JSON.toJavaObject(JSONObject.parseObject(json),CartDto.class);
             cartDtoList.add(cartDto);

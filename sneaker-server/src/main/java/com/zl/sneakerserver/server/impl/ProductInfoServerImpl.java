@@ -116,6 +116,42 @@ public class ProductInfoServerImpl implements ProductInfoServer {
     }
 
     /**
+     * 更新商品信息
+     * @param productInfo
+     * @param thumbnail
+     * @param productImgList
+     * @return
+     */
+    @Override
+    @Transactional
+    public ProductInfoDto updateProduct(ProductInfo productInfo, ImageHolder thumbnail, List<ImageHolder> productImgList) {
+        if (productInfo != null ){
+            //添加商品缩率图
+            if (thumbnail != null) {
+                addThumbnail(productInfo, thumbnail);
+            }
+            //添加商品详情图片
+            if (productImgList !=null&&productImgList.size()>0){
+                addProductImgList(productInfo,productImgList);
+            }
+
+            try {
+                //修改商品信息
+                int effectNum = productInfoDao.updateProduct(productInfo);
+                if (effectNum <=0){
+                    return new ProductInfoDto(ProductInfoStateEnum.INNER_ERROE);
+                }
+            }catch (Exception e){
+                throw new ProductInfoException("添加商品失败："+e.getMessage());
+            }
+
+            return new ProductInfoDto(ProductInfoStateEnum.SUCCESS);
+        }else {
+            return new ProductInfoDto(ProductInfoStateEnum.EMPTY);
+        }
+    }
+
+    /**
      * 添加商品图片
      * @param productImg
      * @return

@@ -89,7 +89,7 @@ public class OrderController {
     }
 
     /**
-     * 订单列表
+     * 订单列表 (已弃用，需要修改为管理员查询所有订单)
      *
      * @param page
      * @param size
@@ -220,11 +220,11 @@ public class OrderController {
         }
         try {
             //判断订单与用户Id是否一致
-            OrderDto orderDto = orderServer.findByOrderId(orderId,userId);
-            if (orderDto.getOrderMaster()==null){
+            OrderDetailDto orderDetailDto = orderServer.findByOrderId(orderId,userId);
+            if (orderDetailDto.getOrderMaster()==null){
                 return ResultUtil.fail(ResultEnum.ORDER_OWNER_ERROR);
             }
-            return ResultUtil.ok(orderDto.getOrderMaster());
+            return ResultUtil.ok(orderDetailDto);
         } catch (Exception e) {
             log.error("订单查询错误：{}", e.getMessage());
             return ResultUtil.fail();

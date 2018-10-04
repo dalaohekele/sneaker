@@ -1,6 +1,7 @@
 package com.zl.sneakerserver.config;
 
 import com.zl.sneakerserver.authorization.interceptor.AuthorizationInterceptor;
+import com.zl.sneakerserver.authorization.resolvers.AdminUserMethod;
 import com.zl.sneakerserver.authorization.resolvers.CurrentUserMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver;
 
+    @Autowired
+    private AdminUserMethod adminUserMethod;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration ir = registry.addInterceptor(authorizationInterceptor);
@@ -32,9 +36,11 @@ public class MvcConfig implements WebMvcConfigurer {
         ir.excludePathPatterns("/picture/**");
     }
 
+    //自定义参数解析（自定义注解需要在此处添加）
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(currentUserMethodArgumentResolver);
+        argumentResolvers.add(adminUserMethod);
     }
 
     /**

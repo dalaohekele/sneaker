@@ -67,5 +67,20 @@
        (#{productId},#{productName},#{productPrice},#{productStock},#{productDescription},
        #{productIcon},#{productStatus},#{categoryType},#{productShow},#{createTime},#{updateTime})
     </insert>
+
+    <update id="updateProduct" parameterType="com.zl.sneakerentity.dao.ProductInfoDao">
+        update tt_product_info
+        <set>
+            <if test="productInfo.productName != null">product_name = #{productInfo.productName},</if>
+            <if test="productInfo.productPrice != null">product_price = #{productInfo.productPrice},</if>
+            <if test="productInfo.productStock != null">product_stock = #{productInfo.productStock},</if>
+            <if test="productInfo.productDescription != null">product_description = #{productInfo.productDescription},</if>
+            <if test="productInfo.productIcon != null">product_icon = #{productInfo.productIcon},</if>
+            <if test="productInfo.productStatus != null">product_status = #{productInfo.productStatus},</if>
+            <if test="productInfo.categoryType != null">category_type = #{productInfo.categoryType},</if>
+            <if test="productInfo.productShow != null">product_show = #{productInfo.productShow}</if>
+        </set>
+        where product_id=#{productInfo.productId}
+    </update>
 </mapper>
 

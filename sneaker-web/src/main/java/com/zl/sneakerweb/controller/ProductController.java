@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zl.sneakerentity.enums.ProductInfoStateEnum;
 import com.zl.sneakerentity.model.ProductInfo;
+import com.zl.sneakerentity.model.User;
 import com.zl.sneakerentity.redis.GoodsKey;
 import com.zl.sneakerentity.redis.RedisService;
+import com.zl.sneakerserver.authorization.annotatiaon.AdminUser;
+import com.zl.sneakerserver.authorization.annotatiaon.Autorization;
 import com.zl.sneakerserver.dto.ImageHolder;
 import com.zl.sneakerserver.dto.ProductCategoryDto;
 import com.zl.sneakerserver.dto.ProductInfoDto;
@@ -179,12 +182,12 @@ public class ProductController {
     @ResponseBody
     public Object productShow(@RequestParam("product_show") Integer productShow) {
         try {
-            if(StringUtils.isEmpty(productShow)){
+            if (StringUtils.isEmpty(productShow)) {
                 return ResultUtil.badArgumentValue();
             }
             List<ProductInfo> productInfoList = productInfoServer.findByShow(productShow);
             return ResultUtil.ok(productInfoList);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("商品首页展示详情获取失败：{}", e.getMessage());
             return ResultUtil.fail();
         }
@@ -195,7 +198,8 @@ public class ProductController {
 
     @PostMapping(value = "/upload")
     @ResponseBody
-    public Object uploadProductImg(HttpServletRequest request) {
+    @Autorization
+    public Object uploadProductImg(HttpServletRequest request, @AdminUser User user) {
         Map<String, Object> modelMap = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         ProductInfo product = null;
@@ -208,8 +212,6 @@ public class ProductController {
             //检查是否有图片
             if (multipartResolver.isMultipart(request)) {
                 thumbnail = handleImage((MultipartHttpServletRequest) request, productImgList);
-//                System.out.println("图片名字"+thumbnail.getImageName());
-//                System.out.println(productImgList.get(0).getImageName());
             } else {
                 modelMap.put("success", false);
                 modelMap.put("errorMsg", "上传图片不能为空");
@@ -229,27 +231,21 @@ public class ProductController {
             return modelMap;
         }
 
-        if (product != null && thumbnail != null && productImgList.size() > 0)
-        {
-            try
-            {
+        if (product != null && thumbnail != null && productImgList.size() > 0) {
+            try {
                 ProductInfoDto pe = productInfoServer.addProduct(product, thumbnail, productImgList);
-                if (pe.getState() == ProductInfoStateEnum.SUCCESS.getState())
-                {
+                if (pe.getState() == ProductInfoStateEnum.SUCCESS.getState()) {
                     modelMap.put("success", true);
-                } else
-                {
+                } else {
                     modelMap.put("success", false);
                     modelMap.put("errMsg", pe.getStateInfo());
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 modelMap.put("success", false);
                 modelMap.put("errMsg", e.toString());
                 return modelMap;
             }
-        } else
-        {
+        } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "请输入商品信息");
         }
@@ -300,6 +296,57 @@ public class ProductController {
         }
 
         return url;
+    }
+
+
+    @PostMapping(value = "/update")
+    @ResponseBody
+    @Autorization
+    public Object updateProductImg(HttpServletRequest request,
+                                   @RequestParam("product_id") String productId,
+                                   @AdminUser User user) {
+        Map<String, Object> modelMap = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        ProductInfo product = null;
+        String productStr = RequestUtil.getString(request, "productStr");
+        MultipartHttpServletRequest multipartRequest = null;
+        ImageHolder thumbnail = null;
+        List<ImageHolder> productImgList = new ArrayList<>();
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+        try {
+            //检查是否有图片
+            if (multipartResolver.isMultipart(request)) {
+                thumbnail = handleImage((MultipartHttpServletRequest) request, productImgList);
+            }
+            product = mapper.readValue(productStr, ProductInfo.class);
+
+            product.setProductId(productId);
+            modelMap.put("data", product);
+        } catch (IOException e) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.toString());
+            return modelMap;
+        }
+
+        if (thumbnail != null && productImgList.size() > 0) {
+            try {
+                ProductInfoDto pe = productInfoServer.updateProduct(product, thumbnail, productImgList);
+                if (ProductInfoStateEnum.SUCCESS.getState().equals(pe.getState())) {
+                    modelMap.put("success", true);
+                } else {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", pe.getStateInfo());
+                }
+            } catch (Exception e) {
+                modelMap.put("success", false);
+                modelMap.put("errMsg", e.toString());
+                return modelMap;
+            }
+        } else {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "请输入商品信息");
+        }
+        return modelMap;
     }
 
 

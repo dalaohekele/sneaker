@@ -17,7 +17,7 @@ public class User {
     private String userName;
     /* 密码*/
     private String passWord;
-    /* 用户角色*/
+    /* 用户角色   1  普通用户，2 管理员*/
     private int role;
     /*微信用户id*/
     private String wxOpenId;
@@ -25,6 +25,7 @@ public class User {
     private String headImage;
     /* 登陆次数*/
     private int loginCount;
+
     private Date createTime;
 
     private Date updateTime;

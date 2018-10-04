@@ -44,7 +44,7 @@ public interface OrderServer {
      * @param orderId
      * @return
      */
-    OrderDto findByOrderId(String orderId,String userId);
+    OrderDetailDto findByOrderId(String orderId,String userId);
 
 
     /**

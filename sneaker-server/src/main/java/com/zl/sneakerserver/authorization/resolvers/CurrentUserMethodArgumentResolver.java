@@ -12,7 +12,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * @Auther: le
@@ -39,10 +38,11 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         //取出鉴权时存入的登录用户Id
         String currentUserId = (String) webRequest.getAttribute(Constants.CURRENT_USER_ID, RequestAttributes.SCOPE_REQUEST);
-        if (currentUserId != null) {
+        User user = userServer.getUserById(currentUserId);
+        if (user.getRole() == 1 || user.getRole() == 2) {
             //从数据库中查询并返回
-            return userServer.getUserById(currentUserId);
+            return user;
         }
-        throw new MissingServletRequestPartException(Constants.CURRENT_USER_ID);
+        throw new Exception("该账户已失效");
     }
 }

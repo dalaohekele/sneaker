@@ -61,4 +61,11 @@ public interface ProductInfoDao {
      * @return
      */
     int insertProduct(ProductInfo productInfo);
+
+    /**
+     * 更新商品信息
+     * @param productInfo
+     * @return
+     */
+    int updateProduct(@Param("productInfo") ProductInfo productInfo);
 }

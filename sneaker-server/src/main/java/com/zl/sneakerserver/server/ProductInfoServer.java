@@ -44,6 +44,14 @@ public interface ProductInfoServer {
     ProductInfoDto addProduct(ProductInfo productInfo, ImageHolder thumbnail, List<ImageHolder> productImgList);
 
     /**
+     * 更新商品信息
+     * @param productInfo
+     * @param thumbnail
+     * @param productImgList
+     * @return
+     */
+    ProductInfoDto updateProduct(ProductInfo productInfo, ImageHolder thumbnail, List<ImageHolder> productImgList);
+    /**
      * 添加商品图片
      * @param productImg
      * @return

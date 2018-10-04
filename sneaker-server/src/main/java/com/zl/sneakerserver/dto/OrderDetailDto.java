@@ -1,6 +1,7 @@
 package com.zl.sneakerserver.dto;
 
 import com.zl.sneakerentity.model.OrderDetail;
+import com.zl.sneakerentity.model.OrderMaster;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,6 +20,25 @@ public class OrderDetailDto {
     private Date createTime;
     private Date updateTime;
     private List<OrderDetail> detailList;
+    private OrderMaster orderMaster;
+
+    public OrderDetailDto(){}
+
+    public OrderDetailDto(OrderMaster orderMaster,List<OrderDetail> detailList){
+        this.orderMaster = orderMaster;
+        this.detailList = detailList;
+    }
+
+    public OrderMaster getOrderMaster() {
+        return orderMaster;
+    }
+
+    public void setOrderMaster(OrderMaster orderMaster) {
+        this.orderMaster = orderMaster;
+    }
+
+
+
 
     public String getOrderId() {
         return orderId;
