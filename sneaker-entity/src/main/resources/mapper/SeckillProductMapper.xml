@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.sneakerentity.dao.SeckillProductDao">
+    <resultMap id="SeckillProductMapper" type="com.zl.sneakerentity.model.SeckillProduct">
+        <id column="id" property="id"/>
+        <result column="goods_id" property="productId"/>
+        <result column="seckill_price" property="productPrice"/>
+        <result column="stock_count" property="productStock"/>
+        <result column="start_date" property="startDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="version" property="version"/>
+    </resultMap>
+
+    <select id="listSeckillProduct" resultMap="SeckillProductMapper">
+    SELECT id,goods_id,seckill_price,stock_count,start_date,end_date,version
+    FROM tt_seckill_product
+    </select>
+
+    <select id="selectByProductId" resultMap="SeckillProductMapper">
+    SELECT id,goods_id,seckill_price,stock_count,start_date,end_date,version
+    FROM tt_seckill_product
+    WHERE goods_id=#{productId}
+    </select>
+
+    <update id="reduceStockByVersion" parameterType="com.zl.sneakerentity.model.SeckillProduct">
+    update tt_seckill_product
+    set stock_count=stock_count -1 ,version = version+1
+    where goods_id=#{seckillProduct.productId} and stock_count > 0
+    and version = #{seckillProduct.version}
+    </update>
+</mapper>

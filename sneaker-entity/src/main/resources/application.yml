@@ -4,6 +4,7 @@ spring:
   aop:
     auto: true
     proxy-target-class: true
+
 #  servlet:
 #        multipart:
 #          max-file-size: 10Mb
@@ -50,4 +51,7 @@ redis:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zl.sneakerentity.model
+#logging:
+#  level:
+#    com.zl.sneakerentity.dao: debug
 

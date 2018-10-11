@@ -73,6 +73,12 @@ public enum ResultEnum {
     PRODUCT_IMG_UPDATE_SUCCESS(0,"图片上传成功"),
 
     PRODUCT_IMG_UPDATE_FAIL(10023,"图片上传失败"),
+
+    ACCESS_LIMIT_REACHED(10024, "访问高峰期，请稍等！"),
+
+    SECKILL_OVER (10024, "商品已经秒杀完毕"),
+
+    REPEATE_SECKILL(10025, "不能重复秒杀"),
     ;
 
     private Integer state;

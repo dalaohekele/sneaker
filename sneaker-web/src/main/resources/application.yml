@@ -34,3 +34,7 @@ redis:
   poolMaxTotal: 10
   poolMaxIdle: 10
   poolMaxWait: 3
+
+#logging:
+#  level:
+#    com.zl.sneakerentity.dao: debug

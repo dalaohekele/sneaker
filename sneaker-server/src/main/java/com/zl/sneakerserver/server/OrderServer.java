@@ -1,5 +1,8 @@
 package com.zl.sneakerserver.server;
 
+import com.zl.sneakerentity.model.SeckillOrder;
+import com.zl.sneakerentity.model.SeckillProduct;
+import com.zl.sneakerentity.model.User;
 import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
 
@@ -67,4 +70,16 @@ public interface OrderServer {
      *     通过id查询订单中商品详情
      */
     List<OrderDetailDto> findDetailById(String buyerOpenId, Integer pageIndex, Integer pageSize);
+
+    /**
+     * 秒杀订单
+     * @param user
+     * @param seckillProduct
+     * @return
+     */
+    SeckillOrder seckillOrder(User user, SeckillProduct seckillProduct);
+
+
+    SeckillOrder getOrderByUserIdGoodsId(String userId,String productId);
+
 }

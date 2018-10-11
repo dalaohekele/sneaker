@@ -3,13 +3,14 @@ package com.zl.sneakerserver.server.impl;
 import com.zl.sneakerentity.dao.OrderDetailDao;
 import com.zl.sneakerentity.dao.OrderMasterDao;
 import com.zl.sneakerentity.dao.ProductInfoDao;
+import com.zl.sneakerentity.dao.SeckillOrderDao;
 import com.zl.sneakerentity.enums.OrderStatusEnum;
 import com.zl.sneakerentity.enums.PayStatusEnum;
 import com.zl.sneakerentity.enums.ProductInfoStateEnum;
 import com.zl.sneakerentity.enums.ResultEnum;
-import com.zl.sneakerentity.model.OrderDetail;
-import com.zl.sneakerentity.model.OrderMaster;
-import com.zl.sneakerentity.model.ProductInfo;
+import com.zl.sneakerentity.model.*;
+import com.zl.sneakerentity.redis.OrderKey;
+import com.zl.sneakerentity.redis.RedisService;
 import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.exceptions.OrderException;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +49,12 @@ public class OrderServerImpl implements OrderServer {
 
     @Autowired
     ProductInfoServer productInfoServer;
+
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    SeckillOrderDao seckillOrderDao;
 
     /**
      * 创建订单
@@ -297,5 +305,34 @@ public class OrderServerImpl implements OrderServer {
             throw new OrderException("运单查找失败findDetailById error:" + e.getMessage());
         }
     }
+
+    /**
+     * 秒杀订单
+     * @param user
+     * @param seckillProduct
+     * @return
+     */
+    @Override
+    @Transactional
+    public SeckillOrder seckillOrder(User user, SeckillProduct seckillProduct) {
+        SeckillOrder seckillOrder = new SeckillOrder();
+        seckillOrder.setSeckillProductId(seckillProduct.getProductId());
+        seckillOrder.setUserId(user.getId());
+        seckillOrder.setCreateTime(new Date());
+        seckillOrder.setUpdateTime(new Date());
+        seckillOrderDao.insertSeckillOrder(seckillOrder);
+
+        //存入redis，防止重复秒杀
+        redisService.set(OrderKey.getSeckillOrderByUidGid,"" + user.getId() + "_" + seckillProduct.getProductId(), seckillOrder);
+
+        return seckillOrder;
+    }
+
+    @Override
+    public SeckillOrder getOrderByUserIdGoodsId(String userId, String productId) {
+        return redisService.get(OrderKey.getSeckillOrderByUidGid,"" + userId + "_" + productId, SeckillOrder.class);
+    }
+
+
 
 }

@@ -10,13 +10,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.zl.sneakerweb"})
 @EnableSwagger2
 public class SneakerWebApplication {
-
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application){
-//        return application.sources(SneakerWebApplication.class);
-//    }
-
-
     public static void main(String[] args) {
         SpringApplication.run(SneakerWebApplication.class, args);
     }

@@ -65,3 +65,7 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zl.sneakerentity.model
 
+#logging:
+#  level:
+#    com.zl.sneakerentity.dao: debug
+

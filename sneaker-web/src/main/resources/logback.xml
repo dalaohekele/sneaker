@@ -68,7 +68,6 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-
     <logger name="com.zl.sneakerweb.controller" level="${log.level}" additivity="true">
         <appender-ref ref="debugAppender"/>
         <appender-ref ref="infoAppender"/>

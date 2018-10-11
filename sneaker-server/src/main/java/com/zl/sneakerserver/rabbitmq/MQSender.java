@@ -32,4 +32,12 @@ public class MQSender {
         log.info("order send message:"+msg);
         amqpTemplate.convertAndSend(MQConfig.QUEUE,msg);
     }
+
+
+    public void sendSeckillMessage(SeckillMessage message){
+        String msg = RedisService.beanToString(message);
+        log.info("seckillorder send message:"+msg);
+        amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE,msg);
+    }
+
 }

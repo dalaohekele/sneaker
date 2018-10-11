@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.sneakerentity.dao.SeckillOrderDao">
+    <resultMap id="seckillOrderMap" type="com.zl.sneakerentity.model.SeckillOrder">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="goods_id" property="seckillProductId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertSeckillOrder" parameterType="com.zl.sneakerentity.dao.SeckillOrderDao">
+        INSERT INTO tt_seckill_order(id,user_id,goods_id,create_time,update_time)
+        values (#{id},#{userId},#{seckillProductId},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="selectByOrderIdUserId" resultMap="seckillOrderMap">
+        select id,user_id,goods_id,create_time,update_time
+        from tt_seckill_order
+        where user_id = #{userId} and goods_id = #{seckillProductId}
+    </select>
+</mapper>

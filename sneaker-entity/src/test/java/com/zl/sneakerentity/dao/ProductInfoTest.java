@@ -1,6 +1,7 @@
 package com.zl.sneakerentity.dao;
 
 import com.zl.sneakerentity.model.ProductInfo;
+import com.zl.sneakerentity.model.SeckillProduct;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,20 @@ public class ProductInfoTest {
     @Autowired
     ProductInfoDao productInfoDao;
 
+    @Autowired
+    SeckillProductDao seckillProductDao;
+
     @Test
+    public void reduceStockByVersionTest(){
+        SeckillProduct seckillProduct = new SeckillProduct();
+        seckillProduct.setProductId("111");
+        seckillProduct.setVersion(1);
+        int effectNum = seckillProductDao.reduceStockByVersion(seckillProduct);
+        System.out.println(effectNum);
+    }
+
+    @Test
+    @Ignore
     public void productInfoTest(){
 //        List categoryTypeList = new ArrayList();
 //        Map map = new HashMap();
