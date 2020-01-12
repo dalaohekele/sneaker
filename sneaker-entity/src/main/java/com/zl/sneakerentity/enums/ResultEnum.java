@@ -79,6 +79,10 @@ public enum ResultEnum {
     SECKILL_OVER (10024, "商品已经秒杀完毕"),
 
     REPEATE_SECKILL(10025, "不能重复秒杀"),
+
+    SECKILL_NOT_START(10026, "秒杀还没有开始"),
+
+    SECKILL_FINISHED(10027, "秒杀已经结束"),
     ;
 
     private Integer state;

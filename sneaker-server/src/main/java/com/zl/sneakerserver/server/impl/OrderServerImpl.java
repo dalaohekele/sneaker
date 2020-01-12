@@ -9,15 +9,15 @@ import com.zl.sneakerentity.enums.PayStatusEnum;
 import com.zl.sneakerentity.enums.ProductInfoStateEnum;
 import com.zl.sneakerentity.enums.ResultEnum;
 import com.zl.sneakerentity.model.*;
-import com.zl.sneakerentity.redis.OrderKey;
-import com.zl.sneakerentity.redis.RedisService;
+import com.zl.common.redis.OrderKey;
+import com.zl.common.redis.RedisService;
 import com.zl.sneakerserver.dto.OrderDetailDto;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.exceptions.OrderException;
 import com.zl.sneakerserver.server.OrderServer;
 import com.zl.sneakerserver.server.ProductInfoServer;
-import com.zl.sneakerserver.utils.KeyUtils;
-import com.zl.sneakerserver.utils.PageCalculator;
+import com.zl.common.utils.KeyUtils;
+import com.zl.common.utils.PageCalculator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,29 +173,6 @@ public class OrderServerImpl implements OrderServer {
 
     }
 
-
-//    /**已废弃的方法
-//     * 通过id查询订单中商品详情
-//     * @param buyerOpenId
-//     * @param pageIndex
-//     * @param pageSize
-//     * @return
-//     */
-//    @Override
-//    @Transactional
-//    public OrderDto findDetailsByOpenId(String buyerOpenId, Integer pageIndex, Integer pageSize){
-//        //分页数
-//        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
-//        OrderDto orderDto = new OrderDto();
-//        try {
-//            List<OrderMaster> orderMasterList = orderMasterDao.selectOrderDetailByOpenid(buyerOpenId, rowIndex, pageSize);
-//            //返回数据
-//            orderDto.setOrderMasterList(orderMasterList);
-//        } catch (Exception e) {
-//            throw new OrderException("运单查找失败 error:" + e.getMessage());
-//        }
-//        return orderDto;
-//    }
 
     /**
      * 取消订单

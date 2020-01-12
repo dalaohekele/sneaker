@@ -1,6 +1,6 @@
 package com.zl.sneakerserver.rabbitmq;
 
-import com.zl.sneakerentity.redis.RedisService;
+import com.zl.common.redis.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

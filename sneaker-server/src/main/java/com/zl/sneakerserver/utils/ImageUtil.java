@@ -1,5 +1,6 @@
 package com.zl.sneakerserver.utils;
 
+import com.zl.common.utils.PathUtil;
 import com.zl.sneakerserver.dto.ImageHolder;
 import net.coobird.thumbnailator.Thumbnails;
 

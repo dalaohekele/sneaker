@@ -12,6 +12,6 @@ public interface SeckillOrderDao {
 
     int insertSeckillOrder(SeckillOrder seckillOrder);
 
-    SeckillOrderDao selectByOrderIdUserId(@Param("productId") String productId, @Param("userId") String userId);
+    SeckillOrder selectByOrderIdUserId(@Param("productId") String productId, @Param("userId") String userId);
 
 }

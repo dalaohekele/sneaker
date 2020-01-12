@@ -79,7 +79,12 @@ public interface OrderServer {
      */
     SeckillOrder seckillOrder(User user, SeckillProduct seckillProduct);
 
-
+    /**
+     * 是否已秒杀到商品
+     * @param userId
+     * @param productId
+     * @return
+     */
     SeckillOrder getOrderByUserIdGoodsId(String userId,String productId);
 
 }

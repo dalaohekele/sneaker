@@ -3,7 +3,7 @@ package com.zl.sneakerserver.rabbitmq;
 import com.zl.sneakerentity.model.SeckillOrder;
 import com.zl.sneakerentity.model.SeckillProduct;
 import com.zl.sneakerentity.model.User;
-import com.zl.sneakerentity.redis.RedisService;
+import com.zl.common.redis.RedisService;
 import com.zl.sneakerserver.dto.OrderDto;
 import com.zl.sneakerserver.dto.SeckillDto;
 import com.zl.sneakerserver.exceptions.OrderException;
@@ -72,11 +72,7 @@ public class MQReceiver {
         if(order != null) {
             return;
         }
-
         seckillService.seckill(user,seckillProduct);
-        //创建订单，存入数据库
-//        orderServer.seckillOrder(user,seckillProduct);
-
     }
 
 }
