@@ -7,7 +7,7 @@ package com.zl.sneakerweb.authorization.interceptor;
  */
 
 import com.zl.sneakerweb.authorization.annotatiaon.Autorization;
-import com.zl.sneakerweb.config.Constants;
+import com.zl.common.Constants;
 import com.zl.sneakerserver.dto.TokenModel;
 import com.zl.sneakerserver.server.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,25 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.zl</groupId>
-            <artifactId>sneaker-entity</artifactId>
-            <version>1.0.0RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.zl</groupId>
-            <artifactId>sneaker-common</artifactId>
-            <version>1.0.0RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.zl</groupId>
             <artifactId>sneaker-server</artifactId>
             <version>1.0.0RELEASE</version>

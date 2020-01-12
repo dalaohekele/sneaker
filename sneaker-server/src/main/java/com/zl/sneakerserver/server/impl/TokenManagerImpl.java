@@ -1,6 +1,6 @@
 package com.zl.sneakerserver.server.impl;
 
-import com.zl.sneakerweb.config.Constants;
+import com.zl.common.Constants;
 import com.zl.sneakerserver.dto.TokenModel;
 import com.zl.sneakerserver.server.TokenManager;
 import org.springframework.data.redis.core.RedisTemplate;

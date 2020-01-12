@@ -6,7 +6,7 @@ import com.zl.sneakerentity.model.User;
 import com.zl.common.redis.RedisService;
 import com.zl.sneakerweb.authorization.annotatiaon.AdminUser;
 import com.zl.sneakerweb.authorization.annotatiaon.Autorization;
-import com.zl.sneakerweb.config.Constants;
+import com.zl.common.Constants;
 import com.zl.sneakerserver.dto.TokenModel;
 import com.zl.sneakerserver.dto.UserDto;
 import com.zl.sneakerserver.server.TokenManager;

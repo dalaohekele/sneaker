@@ -2,7 +2,7 @@ package com.zl.sneakerweb.authorization.resolvers;
 
 import com.zl.sneakerentity.model.User;
 import com.zl.sneakerweb.authorization.annotatiaon.AdminUser;
-import com.zl.sneakerweb.config.Constants;
+import com.zl.common.Constants;
 import com.zl.sneakerserver.server.UserServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
